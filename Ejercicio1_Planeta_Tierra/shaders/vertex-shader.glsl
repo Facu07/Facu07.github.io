@@ -43,7 +43,8 @@
             
             position.y=-0.15;
             position.x=uv.y-1.0;
-            position.z=(log2(tan(uv.x)+(1.0/cos(uv.x))))-1.0;
+            position.z=(log2(tan(PI/4.0+uv.x/2.0)))-1.0;
+            //position.z=(log2(tan(uv.x)+(1.0/cos(uv.x))))-1.0;
             
 
             // ************************************************************************
