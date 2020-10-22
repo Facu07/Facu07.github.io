@@ -40,10 +40,14 @@
            vec4 textureColor = texture2D(uSampler, vec2(uv.s, uv.t));         
             
             // **************** EDITAR A PARTIR DE AQUI *******************************
-            
-            position.y = 2.0*sin(uv.y)-1.0;
-            position.x=1.0*cos(2.0*PI*uv.x)/2.0;
-            position.z=1.0*sin(2.0*PI*uv.x)/2.0;
+
+            if(textureColor.y < 0.2 && textureColor.z < 0.5 && textureColor.x < 0.5){
+            	position+=normal*(1.0+sin(uv.x*18.0*PI+time*20.0))*0.03;
+            	position+=normal*(1.0+sin(uv.y*18.0*PI+time*20.0))*0.03;
+            }
+            if(!(textureColor.y < 0.2) ){
+            	position+=normal*0.12;
+            }
 
             // ************************************************************************
 
