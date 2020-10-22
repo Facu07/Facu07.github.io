@@ -41,13 +41,16 @@
             
             // **************** EDITAR A PARTIR DE AQUI *******************************
             
+            //position-=normal*2.0;
             position.y=-0.15;
             position.x=uv.y-1.0;
-            position.z=(log2(tan(uv.x)+(1.0/cos(uv.x))))-1.0;
+            position.z=(log2(tan(PI/4.0+uv.x/2.0)))-1.0;
             
-            //position+=normal*(1.0+sin(position.y*8.0*PI))*0.03;
-
-            //position+=normal*(1.0+sin(uv.x*18.0*PI+time*20.0))*0.03; 
+            float a = normal.z*18.0*PI-time*20.0;
+            //float b = normal.z*18.0*PI+time*20.0;
+            //position.x+=normal.x*(1.0+(sin(a)))*0.03;
+            position+=normal*(1.0+(cos(a)))*0.03;
+            //position+=normal*(1.0+(sin(b)))*0.03;
 
             // ************************************************************************
 
