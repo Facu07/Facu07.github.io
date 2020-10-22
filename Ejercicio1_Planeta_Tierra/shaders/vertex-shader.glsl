@@ -41,23 +41,10 @@
             
             // **************** EDITAR A PARTIR DE AQUI *******************************
             
-            float latitude = 41.145556;	 // (φ)
-			float longitude = -73.995; 	  // (λ)
-
-			float mapWidth = 2018.0;
-			float mapHeight = 1024.0;
-
-			position+=normal*(1.0+sin(position.y*8.0*PI))*0.03;
-
-			// get x value
-			//position.x = (latitude+180)*(2048.0/360.0);
-
-			// convert from degrees to radians
-			//float latRad = latitude*PI/180.0;
-
-			// get y value
-			//float mercN = Math.ln(Math.tan((PI/4.0)+(latRad/2.0)));
-			//position.y = (mapHeight/2.0)-(mapWidth*mercN/(2.0*PI));
+            position.y=-0.15;
+            position.x=uv.y-1.0;
+            position.z=(log2(tan(uv.x)+(1.0/cos(uv.x))))-1.0;
+            
 
             // ************************************************************************
 
