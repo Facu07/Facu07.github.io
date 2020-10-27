@@ -41,17 +41,7 @@
             
             // **************** EDITAR A PARTIR DE AQUI *******************************
             
-            position.y=-0.15;
-            position.x=uv.y-1.0;
-            position.z=(log2(tan(PI/4.0+uv.x/2.0)))-1.0;
-            
-            float a=sqrt(pow((position.x-uv.x),2.0)+pow((position.z-uv.y),2.0));
-            //float a = normal.z*18.0*PI-time*20.0;
-            //float b = normal.z*18.0*PI+time*20.0;
-            //position.x+=normal.x*(1.0+(sin(a)))*0.03;
-            position-=normal*(1.0+sin(a+time*10.0))*0.03;
-            //position+=sin(a+time*20.0)*0.03;
-            //position+=normal*(1.0+(sin(b)))*0.03;
+            //position+=normal*(1.0+sin(uv.x*18.0*PI+time*20.0))*0.03; 
 
             // ************************************************************************
 
