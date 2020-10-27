@@ -29,14 +29,16 @@
 var superficie3D;
 var mallaDeTriangulos;
 
-var filas=1;
-var columnas=1;
-
+var filas=2;
+var columnas=2;
+var N=3;
+var M=3;
 
 function crearGeometria(){
         
 
-    superficie3D=new Plano(3,3);
+    superficie3D=new Plano(N,M);
+    //superficie3D=new Esfera(3);
     mallaDeTriangulos=generarSuperficie(superficie3D,filas,columnas);
     
 }
@@ -65,7 +67,23 @@ function Plano(ancho,largo){
     }
 }
 
+function Esfera(radio){
 
+    this.getPosicion=function(u,v){
+
+        var x=(cos(u-0.5))*radio*radio;
+        var z=(sin(v-0.5))*radio*radio;
+        return [x,0,z];
+    }
+
+    this.getNormal=function(u,v){
+        return [0,1,0];
+    }
+
+    this.getCoordenadasTextura=function(u,v){
+        return [u,v];
+    }
+}
 
 
 function generarSuperficie(superficie,filas,columnas){
@@ -103,14 +121,14 @@ function generarSuperficie(superficie,filas,columnas){
     // Buffer de indices de los triángulos
     
     //indexBuffer=[];  
-    indexBuffer=[0,1,2,2,1,3]; // Estos valores iniciales harcodeados solo dibujan 2 triangulos, REMOVER ESTA LINEA!
-
+    //indexBuffer=[0,1,2]; // Estos valores iniciales harcodeados solo dibujan 2 triangulos, REMOVER ESTA LINEA!
+    //indexBuffer=[0,1,2,2,1,3,3,0,4,4,2,0,4,3,2,4,5,3];
     for (i=0; i < filas; i++) {
         for (j=0; j < columnas; j++) {
 
             // completar la lógica necesaria para llenar el indexbuffer en funcion de filas y columnas
             // teniendo en cuenta que se va a dibujar todo el buffer con la primitiva "triangle_strip" 
-            
+            indexBuffer=[i,j+1,j+2,j,i];
         }
     }
 
@@ -169,7 +187,7 @@ function dibujarMalla(mallaDeTriangulos){
         /*
             Aqui es necesario modificar la primitiva por triangle_strip
         */
-        gl.drawElements(gl.TRIANGLES, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLES_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
     }
     
     if (modo!="smooth") {
