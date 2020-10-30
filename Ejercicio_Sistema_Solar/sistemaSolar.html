@@ -407,12 +407,13 @@
             m1=mat4.create();
 
 
+            
+            mat4.rotate(m5,m5,-tiempo,[0,1,0]);
 
-            mat4.rotate(m5,m5,vel,[0,1,0]);
             mat4.translate(m5,m5,[60,0,0]);
             mat4.rotate(m5,m5,vel,[0,1,0]); 
             mat4.rotate(m1,m5,23*Math.PI/180,[1,0,0]);
-            mat4.rotate(m1,m1,20*vel,[0,1,0]);
+            mat4.rotate(m1,m1,20*tiempo,[0,1,0]);
 
             setTransform(tierra,m1);
   
@@ -434,9 +435,9 @@
             // iss
             m4=mat4.create();
 
-            mat4.rotate(m7,m7,vel,[0,1,0]);
-            mat4.translate(m7,m7,[60,0,0]);
             mat4.rotate(m7,m7,-vel,[0,1,0]);
+            mat4.translate(m7,m7,[60,0,0]);
+            mat4.rotate(m7,m7,vel,[0,1,0]);
             mat4.rotate(m7,m7,-5*vel*Math.PI,[1,0,0]);
             mat4.translate(m4,m7,[0,10,0]);
 

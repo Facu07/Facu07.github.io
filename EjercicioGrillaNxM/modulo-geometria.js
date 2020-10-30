@@ -36,7 +36,7 @@ var columnas=2;
 var primitiva = 3;
 var PI = 3.14159265359;
 var radio = 3;
-var amplitud = 3;
+var amplitud = 0.3;
 var longitud = 3;
 
 function crearGeometria(){
@@ -101,13 +101,13 @@ function Esfera(radio){
 function TuboSenoidal(amplitud, longitud, radio){
 
     this.getPosicion=function(u,v){
-        
+       
+        //radio=radio/Math.cos(v*PI);
         var y = v*longitud;
-        var x=(Math.cos(u*2*PI)*radio)-0.5;
-        x=x*Math.sin(y*PI*2)*0.3;
-        var z=(Math.sin(u*2*PI)*radio)-0.5;
-        z=z*Math.sin(y*PI*2)*0.3;
-        
+        var x=(Math.cos(u*2*PI)*(radio/(Math.sin(y*PI)+Math.cos(y*PI)*20)+1))-0.5;
+        //x=x*Math.sin(v*2*PI)*amplitud;
+        var z=(Math.sin(u*2*PI)*(radio/(Math.sin(y*PI)+Math.cos(y*PI)*20)+1))-0.5;
+        //z=z*Math.cos(v*2*PI)*amplitud;
         return [x,y,z];
     }
 
