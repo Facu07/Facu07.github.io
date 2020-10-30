@@ -7,8 +7,10 @@
 
     1) Modificar a función "generarSuperficie" para que tenga en cuenta los parametros filas y columnas al llenar el indexBuffer
        Con esta modificación deberían poder generarse planos de N filas por M columnas
+    YA ESTA
 
     2) Modificar la funcion "dibujarMalla" para que use la primitiva "triangle_strip"
+    YA ESTA
 
     3) Crear nuevos tipos funciones constructoras de superficies
 
@@ -31,14 +33,24 @@ var mallaDeTriangulos;
 
 var filas=2;
 var columnas=2;
-var N=3;
-var M=3;
+var primitiva = 3;
+var PI = 3.14159265359;
+var radio = 3;
+var amplitud = 3;
+var longitud = 3;
 
 function crearGeometria(){
-        
 
-    superficie3D=new Plano(N,M);
-    //superficie3D=new Esfera(3);
+    if (primitiva == 1){
+        superficie3D=new Plano(3,3);
+    }else if (primitiva == 2){
+        superficie3D=new Esfera(radio);
+        filas = columnas = 20;
+    }else {
+        superficie3D=new TuboSenoidal(amplitud, longitud, radio);
+        filas = columnas = 20;
+    }
+    
     mallaDeTriangulos=generarSuperficie(superficie3D,filas,columnas);
     
 }
@@ -71,13 +83,36 @@ function Esfera(radio){
 
     this.getPosicion=function(u,v){
 
-        var x=(cos(u-0.5))*radio*radio;
-        var z=(sin(v-0.5))*radio*radio;
-        return [x,0,z];
+        var x=(radio*(Math.cos(u*PI*2))*Math.sin(v*PI));
+        var y=(radio*Math.cos(v*PI))-0.5;
+        var z=(radio*(Math.sin(u*PI*2))*Math.sin(v*PI));
+        return [x,y,z];
     }
 
     this.getNormal=function(u,v){
-        return [0,1,0];
+        return [2*radio*(Math.cos(u))*Math.sin(v),2*radio*Math.cos(v),2*radio*(Math.sin(u))*Math.sin(v)];
+    }
+
+    this.getCoordenadasTextura=function(u,v){
+        return [u,v];
+    }
+}
+
+function TuboSenoidal(amplitud, longitud, radio){
+
+    this.getPosicion=function(u,v){
+        
+        var y = v*longitud;
+        var x=(Math.cos(u*2*PI)*radio)-0.5;
+        x=x*Math.sin(y*PI*2)*0.3;
+        var z=(Math.sin(u*2*PI)*radio)-0.5;
+        z=z*Math.sin(y*PI*2)*0.3;
+        
+        return [x,y,z];
+    }
+
+    this.getNormal=function(u,v){
+        return [2.0*Math.cos(u)*radio,1,2.0*Math.sin(u)*radio];
     }
 
     this.getCoordenadasTextura=function(u,v){
@@ -118,17 +153,12 @@ function generarSuperficie(superficie,filas,columnas){
         }
     }
 
-    // Buffer de indices de los triángulos
-    
-    //indexBuffer=[];  
-    //indexBuffer=[0,1,2]; // Estos valores iniciales harcodeados solo dibujan 2 triangulos, REMOVER ESTA LINEA!
-    //indexBuffer=[0,1,2,2,1,3,3,0,4,4,2,0,4,3,2,4,5,3];
-    for (i=0; i < filas; i++) {
-        for (j=0; j < columnas; j++) {
-
-            // completar la lógica necesaria para llenar el indexbuffer en funcion de filas y columnas
-            // teniendo en cuenta que se va a dibujar todo el buffer con la primitiva "triangle_strip" 
-            indexBuffer=[i,j+1,j+2,j,i];
+    // Buffer de indices de los triángulos    
+    indexBuffer=[];  
+    for (r=0; r < filas; r++) {
+        for (c=0; c <= columnas; c++) {
+            indexBuffer.push(c + r + r*columnas);
+            indexBuffer.push(c + r + (r+1)*columnas+1);
         }
     }
 
@@ -187,7 +217,7 @@ function dibujarMalla(mallaDeTriangulos){
         /*
             Aqui es necesario modificar la primitiva por triangle_strip
         */
-        gl.drawElements(gl.TRIANGLES_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
+        gl.drawElements(gl.TRIANGLE_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
     }
     
     if (modo!="smooth") {
