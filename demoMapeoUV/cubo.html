@@ -55,10 +55,29 @@
 
             tip: las funciones floor() y mod() pueden ser de utilizada
 
-       */
+            auxUv.x maneja las filas a las cuales queres acceder en la matriz de ticks
 
-       vUv = auxUv;
-       gl_Position = projectionMatrix * modelViewMatrix * aux;
+            auxUv.y maneja las columnas a las cuales queres acceder en la matriz de ticks
+
+       */
+    
+      float count = 60.0;
+      auxUv.y=auxUv.y+3.0;
+
+      auxUv.x=auxUv.x+(floor(frame/20.0));
+      //auxUv.y=auxUv.y+(floor(frame/70.0));
+
+
+      if(floor(frame) > 80.0 || floor(frame) > 200.0 ){
+        auxUv.x=auxUv.x-4.0;
+        print(floor(frame));
+      }
+
+      auxUv.x=(auxUv.x/4.0);
+      auxUv.y=(auxUv.y/4.0);
+
+     vUv = auxUv;
+     gl_Position = projectionMatrix * modelViewMatrix * aux;
        
     }
 
