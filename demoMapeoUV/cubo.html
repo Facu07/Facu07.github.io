@@ -64,14 +64,28 @@
       float count = 60.0;
       auxUv.y=auxUv.y+3.0;
 
-      auxUv.x=auxUv.x+(floor(frame/20.0));
-      //auxUv.y=auxUv.y+(floor(frame/70.0));
+      auxUv.x=auxUv.x+(floor(frame/10.0));
+      auxUv.y=auxUv.y-(floor(frame/40.0));
 
-
-      if(floor(frame) > 80.0 || floor(frame) > 200.0 ){
+     if(frame >= (floor(59.0*t)+1.0)){
         auxUv.x=auxUv.x-4.0;
-        print(floor(frame));
+        //auxUv.y=auxUv.y-1.0;
       }
+/*
+      if(frame >= 80.0){
+        auxUv.x=auxUv.x-4.0;
+        //auxUv.y=auxUv.y-1.0;
+      }
+
+      if(frame >= 120.0 ){
+        auxUv.x=auxUv.x-4.0;
+        //auxUv.y=auxUv.y-1.0;  
+      }
+
+      if(frame >= 160.0){
+        auxUv.x=auxUv.x-4.0;
+        auxUv.y=auxUv.y+4.0;  
+      }*/
 
       auxUv.x=(auxUv.x/4.0);
       auxUv.y=(auxUv.y/4.0);

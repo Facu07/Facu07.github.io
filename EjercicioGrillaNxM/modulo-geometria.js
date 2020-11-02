@@ -36,7 +36,7 @@ var columnas=2;
 var primitiva = 3;
 var PI = 3.14159265359;
 var radio = 3;
-var amplitud = 0.3;
+var amplitud = 1;
 var longitud = 3;
 
 function crearGeometria(){
@@ -45,10 +45,10 @@ function crearGeometria(){
         superficie3D=new Plano(3,3);
     }else if (primitiva == 2){
         superficie3D=new Esfera(radio);
-        filas = columnas = 20;
+        filas = columnas = 50;
     }else {
         superficie3D=new TuboSenoidal(amplitud, longitud, radio);
-        filas = columnas = 20;
+        filas = columnas = 50;
     }
     
     mallaDeTriangulos=generarSuperficie(superficie3D,filas,columnas);
@@ -102,17 +102,17 @@ function TuboSenoidal(amplitud, longitud, radio){
 
     this.getPosicion=function(u,v){
        
-        //radio=radio/Math.cos(v*PI);
-        var y = v*longitud;
-        var x=(Math.cos(u*2*PI)*(radio/(Math.sin(y*PI)+Math.cos(y*PI)*20)+1))-0.5;
-        //x=x*Math.sin(v*2*PI)*amplitud;
-        var z=(Math.sin(u*2*PI)*(radio/(Math.sin(y*PI)+Math.cos(y*PI)*20)+1))-0.5;
-        //z=z*Math.cos(v*2*PI)*amplitud;
+        var y = (v*longitud*2)-2.0;
+        var x=(Math.cos(u*2*PI)*radio);
+        var z=(Math.sin(u*2*PI)*radio);
+        var radioAnterior = radio;
+        radio=radio+(Math.cos(y*PI*2.0)/300*amplitud);
+
         return [x,y,z];
     }
 
     this.getNormal=function(u,v){
-        return [2.0*Math.cos(u)*radio,1,2.0*Math.sin(u)*radio];
+        return [2.0*Math.cos(u*2.0*PI)*radio,0,2.0*Math.sin(u*2.0*PI)*radio];
     }
 
     this.getCoordenadasTextura=function(u,v){
