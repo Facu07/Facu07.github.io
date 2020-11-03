@@ -15,10 +15,11 @@
     3) Crear nuevos tipos funciones constructoras de superficies
 
         3a) Crear la función constructora "Esfera" que reciba como parámetro el radio
+        YA ESTA
 
         3b) Crear la función constructora "TuboSenoidal" que reciba como parámetro la amplitud de onda, longitud de onda, radio del tubo y altura.
         (Ver imagenes JPG adjuntas)
-        
+        YA ESTA
         
     Entrega:
     -------
@@ -30,14 +31,8 @@
 
 var superficie3D;
 var mallaDeTriangulos;
-
-var filas=2;
-var columnas=2;
-var primitiva = 3;
 var PI = 3.14159265359;
-var radio = 3;
-var amplitud = 1;
-var longitud = 3;
+
 
 function crearGeometria(){
 
@@ -45,10 +40,14 @@ function crearGeometria(){
         superficie3D=new Plano(3,3);
     }else if (primitiva == 2){
         superficie3D=new Esfera(radio);
-        filas = columnas = 50;
+        if (filas < 20 || columnas < 20){
+            filas = columnas = 20;
+        }
     }else {
         superficie3D=new TuboSenoidal(amplitud, longitud, radio);
-        filas = columnas = 50;
+        if (filas < 20 || columnas < 20){
+            filas = columnas = 20;
+        }
     }
     
     mallaDeTriangulos=generarSuperficie(superficie3D,filas,columnas);
