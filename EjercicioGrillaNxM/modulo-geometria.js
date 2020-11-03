@@ -28,7 +28,6 @@
     
 */
 
-
 var superficie3D;
 var mallaDeTriangulos;
 var PI = 3.14159265359;
@@ -43,10 +42,12 @@ function crearGeometria(){
         if (filas < 20 || columnas < 20){
             filas = columnas = 20;
         }
-    }else {
+    }else if (primitiva == 3){
         superficie3D=new TuboSenoidal(amplitud, longitud, radio);
-        if (filas < 20 || columnas < 20){
-            filas = columnas = 20;
+        if (filas < 30 || columnas < 30){
+            filas = columnas = 30;
+        }else{
+        	filas = columnas;
         }
     }
     
@@ -105,7 +106,7 @@ function TuboSenoidal(amplitud, longitud, radio){
         var x=(Math.cos(u*2*PI)*radio);
         var z=(Math.sin(u*2*PI)*radio);
         var radioAnterior = radio;
-        radio=radio+(Math.cos(y*PI*2.0)/300*amplitud);
+        radio=radio+(Math.cos(y*PI*2.0)/100*amplitud);
 
         return [x,y,z];
     }
