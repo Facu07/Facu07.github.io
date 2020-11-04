@@ -46,8 +46,6 @@ function crearGeometria(){
         superficie3D=new TuboSenoidal(amplitud, longitud, radio);
         if (filas < 30 || columnas < 30){
             filas = columnas = 30;
-        }else{
-        	filas = columnas;
         }
     }
     
