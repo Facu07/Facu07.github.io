@@ -50,9 +50,11 @@
 
         var vertexShaderFile="vertex-shader.glsl";
         var vertexShaderFileEarth="vertex-shader-earth.glsl";
+        var vertexShaderFileEarth="vertex-shader-sky.glsl";
         var modo="smooth"; // wireframe, smooth, edges
         var shaderProgram;
         var shaderProgramEarth;
+        var shaderProgramSky;
         var time=0;
 
         var gl;
@@ -80,6 +82,9 @@
 
         var vertexShaderEarthSource;
         var fragmentShaderEarthSource;
+
+        var vertexShaderSkySource;
+        var fragmentShaderSkySource;
 
         var scale1=1;
         var low=-0.5;
@@ -131,7 +136,7 @@
 
         function loadShaders(){
 
-            $.when(loadVS(),loadVSEarth(), loadFS(), loadFSEarth()).done(function(res1,res2){
+            $.when(loadVS(),loadVSEarth(), loadVSSky(), loadFS(), loadFSEarth(), loadFSSky()).done(function(res1,res2){
                 //this code is executed when all ajax calls are done     
                 webGLStart();
             });
@@ -152,7 +157,16 @@
                         vertexShaderEarthSource=result;
                     }
                 });
-            }   
+            }
+
+            function loadVSSky() {
+                return  $.ajax({
+                    url: "shaders/vertex-shader-sky.glsl",
+                    success: function(result){
+                        vertexShaderSkySource=result;
+                    }
+                });
+            }  
 
             function loadFS() {
                 return  $.ajax({
@@ -168,6 +182,15 @@
                     url: "shaders/fragment-shader-earth.glsl",
                     success: function(result){
                         fragmentShaderEarthSource=result;
+                    }
+                });
+            }
+
+            function loadFSSky() {
+                return  $.ajax({
+                    url: "shaders/fragment-shader-sky.glsl",
+                    success: function(result){
+                        fragmentShaderSkySource=result;
                     }
                 });
             }
@@ -214,8 +237,12 @@
             var vertexShaderEarth= getShader(gl, vertexShaderEarthSource,"vertex");
             var fragmentShaderEarth= getShader(gl, fragmentShaderEarthSource,"fragment");
 
+            var vertexShaderSky= getShader(gl, vertexShaderSkySource,"vertex");
+            var fragmentShaderSky= getShader(gl, fragmentShaderSkySource,"fragment");
+
             shaderProgram = gl.createProgram();
             shaderProgramEarth = gl.createProgram();
+            shaderProgramSky = gl.createProgram();
 
             gl.attachShader(shaderProgram, vertexShader);
             gl.attachShader(shaderProgram, fragmentShader);
@@ -225,6 +252,10 @@
             gl.attachShader(shaderProgramEarth, fragmentShaderEarth);
             gl.linkProgram(shaderProgramEarth);
     
+            gl.attachShader(shaderProgramSky, vertexShaderSky);
+            gl.attachShader(shaderProgramSky, fragmentShaderSky);
+            gl.linkProgram(shaderProgramSky);
+
             if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
                 alert("Could not initialise shaders");
             }
@@ -232,7 +263,10 @@
             if (!gl.getProgramParameter(shaderProgramEarth, gl.LINK_STATUS)) {
                 alert("Could not initialise shaders");
             }
-    
+
+            if (!gl.getProgramParameter(shaderProgramSky, gl.LINK_STATUS)) {
+                alert("Could not initialise shaders");
+            }
     
             shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
             gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
@@ -249,6 +283,12 @@
             shaderProgramEarth.vertexNormalAttribute = gl.getAttribLocation(shaderProgramEarth, "aNormal");
             gl.enableVertexAttribArray(shaderProgramEarth.vertexNormalAttribute);
 
+            shaderProgramSky.vertexPositionAttribute = gl.getAttribLocation(shaderProgramSky, "aPosition");
+            gl.enableVertexAttribArray(shaderProgramSky.vertexPositionAttribute);
+            shaderProgramSky.textureCoordAttribute = gl.getAttribLocation(shaderProgramSky, "aUv");
+            gl.enableVertexAttribArray(shaderProgramSky.textureCoordAttribute);
+            shaderProgramSky.vertexNormalAttribute = gl.getAttribLocation(shaderProgramSky, "aNormal");
+            gl.enableVertexAttribArray(shaderProgramSky.vertexNormalAttribute);
     
 
             shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
@@ -282,10 +322,22 @@
             shaderProgramEarth.lightingDirectionUniform = gl.getUniformLocation(shaderProgramEarth, "uLightPosition");
             shaderProgramEarth.directionalColorUniform = gl.getUniformLocation(shaderProgramEarth, "uDirectionalColor");
             shaderProgramEarth.lightingDirectionUniform2 = gl.getUniformLocation(shaderProgramEarth, "uLightPosition2");
-            shaderProgramEarth.directionalColorUniform2 = gl.getUniformLocation(shaderProgramEarth, "uDirectionalColor2"); 
+            shaderProgramEarth.directionalColorUniform2 = gl.getUniformLocation(shaderProgramEarth, "uDirectionalColor2");
+
+            shaderProgramSky.pMatrixUniform = gl.getUniformLocation(shaderProgramSky, "uPMatrix");
+            shaderProgramSky.mMatrixUniform = gl.getUniformLocation(shaderProgramSky, "uMMatrix");
+            shaderProgramSky.vMatrixUniform = gl.getUniformLocation(shaderProgramSky, "uVMatrix");
+            shaderProgramSky.nMatrixUniform = gl.getUniformLocation(shaderProgramSky, "uNMatrix");
+            shaderProgramSky.samplerUniform = gl.getUniformLocation(shaderProgramSky, "uSampler");
+            shaderProgramSky.useLightingUniform = gl.getUniformLocation(shaderProgramSky, "uUseLighting");
+            shaderProgramSky.ambientColorUniform = gl.getUniformLocation(shaderProgramSky, "uAmbientColor");
+            shaderProgramSky.frameUniform = gl.getUniformLocation(shaderProgramSky, "time");
+            shaderProgramSky.lightingDirectionUniform = gl.getUniformLocation(shaderProgramSky, "uLightPosition");
+            shaderProgramSky.directionalColorUniform = gl.getUniformLocation(shaderProgramSky, "uDirectionalColor");
+            shaderProgramSky.lightingDirectionUniform2 = gl.getUniformLocation(shaderProgramSky, "uLightPosition2");
+            shaderProgramSky.directionalColorUniform2 = gl.getUniformLocation(shaderProgramSky, "uDirectionalColor2"); 
         }
-        
-    
+
         function setMatrixUniforms() {
             
             gl.uniformMatrix4fv(shaderProgram.vMatrixUniform, false, matrizVista);
@@ -297,6 +349,13 @@
             
             gl.uniformMatrix4fv(shaderProgramEarth.vMatrixUniform, false, matrizVista);
            	gl.uniformMatrix4fv(shaderProgramEarth.pMatrixUniform, false, matrizProyeccion);
+    
+        }
+
+        function setMatrixUniformsSky() {
+            
+            gl.uniformMatrix4fv(shaderProgramSky.vMatrixUniform, false, matrizVista);
+            gl.uniformMatrix4fv(shaderProgramSky.pMatrixUniform, false, matrizProyeccion);
     
         }
               
@@ -329,6 +388,11 @@
             gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.30, 0.23, 0.19);//0.6, 0.6, 0.6 );
             gl.uniform3f(shaderProgramEarth.directionalColorUniform, 1.2, 1.1, 0.7);
             gl.uniform1i(shaderProgramEarth.useLightingUniform,(lighting=="true"));
+
+            gl.uniform1f(shaderProgramSky.frameUniform, time/10.0 );
+            gl.uniform3f(shaderProgramSky.ambientColorUniform, 0.6, 0.6, 0.6 );
+            gl.uniform3f(shaderProgramSky.directionalColorUniform, 1.2, 1.1, 0.7);
+            gl.uniform1i(shaderProgramSky.useLightingUniform,(lighting=="true"));
             
             /*gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
             gl.uniform3f(shaderProgram.ambientColorUniform, 0.6, 0.6, 0.6 );
@@ -432,9 +496,13 @@
             setMatrixUniforms();
             contenedorHelicoptero.dibujar();
             plataformaHeli.dibujar();
-            //sky.dibujar();
 
-            var pos = contenedorHelicoptero.getPosicion()
+            var pos = contenedorHelicoptero.getPosicion();
+
+            gl.useProgram(shaderProgramSky);
+            setMatrixUniformsSky();
+            sky.dibujar();
+
             gl.useProgram(shaderProgramEarth);
             setMatrixUniformsEarth();
 
@@ -492,6 +560,10 @@
 
             controlHelicopterio=new ControlHelicoptero();
             contenedorHelicoptero = new Helicoptero();
+
+            sky = new TexturedSphere(segmentos, segmentos)
+            sky.initBuffers();
+            sky.initTexture("img/cielo1.jpg");
 
             textureManager = new TextureManager(9); //
             textureManager.initParcelas(segmentos, segmentos);
