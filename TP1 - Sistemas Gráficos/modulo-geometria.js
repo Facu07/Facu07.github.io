@@ -3,14 +3,16 @@ var mat4=glMatrix.mat4;
 var mat3=glMatrix.mat3;
 var vec4=glMatrix.vec4;
 var vec3=glMatrix.vec3;
+var textured = false;
 
 var superficie3D;
 
 
-function crearGeometria(SUPERFICIE, filas, columnas){
+function crearGeometria(SUPERFICIE, filas, columnas, esTexturada){
 
     superficie3D=SUPERFICIE;
-    return generarSuperficie(superficie3D,filas,columnas);;
+    textured = esTexturada;
+    return generarSuperficie(superficie3D,filas,columnas, esTexturada);;
 }
 
 function dibujarGeometria(mallaDeTriangulos, textura){
@@ -160,12 +162,12 @@ function TuboSenoidal(amplitud_onda, long_onda, radio, altura, conTapa) {
 }
 
 
-function generarSuperficie(superficie,filas,columnas){
+function generarSuperficie(superficie,filas,columnas, esTexturada){
     
     positionBuffer = [];
     normalBuffer = [];
-    texture_coord_buffer = [];
-    //uvBuffer = [];
+    //texture_coord_buffer = [];
+    uvBuffer = [];
 
     for (var i=0; i <= filas; i++) {
         for (var j=0; j <= columnas; j++) {
@@ -185,13 +187,15 @@ function generarSuperficie(superficie,filas,columnas){
             normalBuffer.push(nrm[1]);
             normalBuffer.push(nrm[2]);
 
-            //texture_coord_buffer.push(u);
-            //texture_coord_buffer.push(v);
+            if(esTexturada){
+                var uvs=superficie.getCoordenadasTextura(u,v);
+                uvBuffer.push(uvs[0]);
+                uvBuffer.push(uvs[1]);
+                //texture_coord_buffer.push(u);
+                //texture_coord_buffer.push(v);
+            }
 
-            //var uvs=superficie.getCoordenadasTextura(u,v);
 
-            //uvBuffer.push(uvs[0]);
-            //uvBuffer.push(uvs[1]);
 
         }
     }
@@ -241,12 +245,13 @@ function generarSuperficie(superficie,filas,columnas){
     webgl_texture_coord_buffer.itemSize = 2;
     webgl_texture_coord_buffer.numItems = texture_coord_buffer.length / 2;*/
 
-   /* webgl_uvs_buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, webgl_uvs_buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvBuffer), gl.STATIC_DRAW);
-    webgl_uvs_buffer.itemSize = 2;
-    webgl_uvs_buffer.numItems = uvBuffer.length / 2;*/
-
+    if(esTexturada){
+        webgl_uvs_buffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, webgl_uvs_buffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(uvBuffer), gl.STATIC_DRAW);
+        webgl_uvs_buffer.itemSize = 2;
+        webgl_uvs_buffer.numItems = uvBuffer.length / 2;
+    }
 
     webgl_index_buffer = gl.createBuffer();
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, webgl_index_buffer);
@@ -258,7 +263,7 @@ function generarSuperficie(superficie,filas,columnas){
         webgl_position_buffer,
         webgl_normal_buffer,
         //webgl_texture_coord_buffer,
-        //webgl_uvs_buffer,
+        webgl_uvs_buffer,
         webgl_index_buffer
     }
 }
@@ -272,8 +277,10 @@ function dibujarMalla(mallaDeTriangulos, textura){
     //gl.bindBuffer(gl.ARRAY_BUFFER, webgl_texture_coord_buffer);
     //gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, webgl_texture_coord_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    //gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_uvs_buffer);
-    //gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, mallaDeTriangulos.webgl_uvs_buffer.itemSize, gl.FLOAT, false, 0, 0);
+    if(textured){
+        gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_uvs_buffer);
+        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, mallaDeTriangulos.webgl_uvs_buffer.itemSize, gl.FLOAT, false, 0, 0);
+    }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_normal_buffer);
     gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, mallaDeTriangulos.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);

@@ -64,6 +64,7 @@
         
         var textureManager;
         var sky;
+        var agua;
             
         var $canvas=$("#myCanvas");
         var aspect=$canvas.width()/$canvas.height();
@@ -502,12 +503,12 @@
             gl.useProgram(shaderProgramSky);
             setMatrixUniformsSky();
             sky.dibujar();
+            agua.dibujar(pos[0],pos[2]);
 
             gl.useProgram(shaderProgramEarth);
             setMatrixUniformsEarth();
 
             textureManager.dibujar(pos[0],pos[2]);
-            //sky.dibujar();
 
             
         }
@@ -565,21 +566,17 @@
             sky.initBuffers();
             sky.initTexture("img/sky_lightblue2.jpg");
 
-            textureManager = new TextureManager(9); //
-            textureManager.initParcelas(segmentos, segmentos);
+            agua = new TextureManager(12);
+            agua.initParcelas(segmentos, segmentos, shaderProgramSky);
+            agua.initTexture("img/agua.jpg");
+
+            textureManager = new TextureManager(12); //
+            textureManager.initParcelas(segmentos, segmentos, shaderProgramEarth);
             textureManager.initTexture("img/heightmap.png");
             textureManager.initTexture("img/pasto.jpg");
             textureManager.initTexture("img/tierra.jpg");
             textureManager.initTexture("img/roca.jpg");
 
-
-            /*sky = new TextureManager(9); //
-            sky.initParcelas(segmentos, segmentos);
-            sky.initTexture("img/sky_lightblue2.jpg");*/
-
-            /*sky = new TexturedSphere(segmentos,segmentos); //
-            sky.initBuffers();
-            sky.initTexture("img/sky_lightblue2.jpg");*/
 
             gl.clearColor(66.2, 0.2, 0.2, 1.0);
             gl.clear(gl.COLOR_BUFFER_BIT);

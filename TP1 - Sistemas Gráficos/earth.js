@@ -3,7 +3,7 @@ var lado_parcela = 4
 
 class Earth {
 
-	constructor(latitude_bands, longitude_bands) {
+	constructor(latitude_bands, longitude_bands, shaderProgram) {
 
         this.matrizModelado = mat4.create();
 		this.latitudeBands = latitude_bands;
@@ -20,13 +20,14 @@ class Earth {
         this.webgl_index_buffer = null;
         
         this.texture = null;
+        this.shaderProgram = shaderProgram;
 	}
 
     actualizarMatrices = function() {
 
         this.matrizModelado = mat4.create();
         
-        gl.uniformMatrix4fv(shaderProgramEarth.mMatrixUniform, false, this.matrizModelado);
+        gl.uniformMatrix4fv(this.shaderProgram.mMatrixUniform, false, this.matrizModelado);
 
         var normalMatrix = mat3.create();
         mat3.fromMat4(normalMatrix,this.matrizModelado);
@@ -35,7 +36,7 @@ class Earth {
         mat3.invert(normalMatrix, normalMatrix);
         mat3.transpose(normalMatrix,normalMatrix);
 
-        gl.uniformMatrix3fv(shaderProgramEarth.nMatrixUniform, false, normalMatrix);
+        gl.uniformMatrix3fv(this.shaderProgram.nMatrixUniform, false, normalMatrix);
     }
 
     // Se generan los vertices para la esfera, calculando los datos para una esfera de radio 1
@@ -132,39 +133,39 @@ class Earth {
     
         // Se configuran los buffers que alimentaron el pipeline
         gl.bindBuffer(gl.ARRAY_BUFFER, this.webgl_position_buffer);
-        gl.vertexAttribPointer(shaderProgramEarth.vertexPositionAttribute, this.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.webgl_texture_coord_buffer);
-        gl.vertexAttribPointer(shaderProgramEarth.textureCoordAttribute, this.webgl_texture_coord_buffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(this.shaderProgram.textureCoordAttribute, this.webgl_texture_coord_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.webgl_normal_buffer);
-        gl.vertexAttribPointer(shaderProgramEarth.vertexNormalAttribute, this.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(this.shaderProgram.vertexNormalAttribute, this.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, textures[0]);
-        gl.uniform1i(shaderProgramEarth.samplerUniform, 0);
+        gl.uniform1i(this.shaderProgram.samplerUniform, 0);
 
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, textures[1]);
-        gl.uniform1i(shaderProgramEarth.samplerUniform0, 1);
+        gl.uniform1i(this.shaderProgram.samplerUniform0, 1);
 
         gl.activeTexture(gl.TEXTURE2);
         gl.bindTexture(gl.TEXTURE_2D, textures[2]);
-        gl.uniform1i(shaderProgramEarth.samplerUniform1, 2);
+        gl.uniform1i(this.shaderProgram.samplerUniform1, 2);
 
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_2D, textures[3]);
-        gl.uniform1i(shaderProgramEarth.samplerUniform2, 3);
+        gl.uniform1i(this.shaderProgram.samplerUniform2, 3);
         
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.webgl_index_buffer);
 
         if (modo!="wireframe"){
-            gl.uniform1i(shaderProgramEarth.useLightingUniform,(lighting=="true"));                    
+            gl.uniform1i(this.shaderProgram.useLightingUniform,(lighting=="true"));                    
             gl.drawElements(gl.TRIANGLES, this.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
         }
         
         if (modo!="smooth") {
-            gl.uniform1i(shaderProgramEarth.useLightingUniform,false);
+            gl.uniform1i(this.shaderProgram.useLightingUniform,false);
             gl.drawElements(gl.LINE_STRIP, this.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
         }
         
