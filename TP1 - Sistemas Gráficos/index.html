@@ -395,10 +395,6 @@
             gl.uniform3f(shaderProgramSky.directionalColorUniform, 1.2, 1.1, 0.7);
             gl.uniform1i(shaderProgramSky.useLightingUniform,(lighting=="true"));
             
-            /*gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
-            gl.uniform3f(shaderProgram.ambientColorUniform, 0.6, 0.6, 0.6 );
-            gl.uniform3f(shaderProgram.directionalColorUniform, 1.2, 1.1, 0.7);
-            gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
             // Configuración de la luz
 
             // Sol
@@ -420,7 +416,14 @@
             gl.uniform1f(shaderProgramEarth.lightPrincipalIntensity, 1.2);                         //Intensidad
             gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
             gl.uniform3f(shaderProgramEarth.diffusePrincipalColorUniform, 1.0, 1.0, 1.0);          //Difusa
-            gl.uniform3f(shaderProgramEarth.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular*/
+            gl.uniform3f(shaderProgramEarth.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular
+
+            gl.uniform3fv(shaderProgramSky.lightingPrincipalDirectionUniform, sunPosition);
+            gl.uniform3fv(shaderProgramSky.sunPositionUniform, sunPosition);
+            gl.uniform1f(shaderProgramSky.lightPrincipalIntensity, 1.2);                         //Intensidad
+            gl.uniform3f(shaderProgramSky.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
+            gl.uniform3f(shaderProgramSky.diffusePrincipalColorUniform, 1.0, 1.0, 1.0);          //Difusa
+            gl.uniform3f(shaderProgramSky.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular*/
             
             // Definimos la ubicación de la camara
 
@@ -485,13 +488,6 @@
                     mat4.translate(matrizVista,matrizVista,eye_point)
                     break;
             }
-                
-            /*var lightPosition = [10.0,0.0, 3.0];
-            //var lightPosition2 = [-5.0,5.0, -10.0];  
-            gl.uniform3fv(shaderProgram.lightingDirectionUniform, lightPosition);
-
-            gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform, lightPosition);*/
-
 
             gl.useProgram(shaderProgram);
             setMatrixUniforms();

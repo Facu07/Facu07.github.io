@@ -1,4 +1,9 @@
-        precision mediump float;
+        precision highp float;
+
+
+        uniform float h1;
+        uniform float h2;
+        uniform float h3;
 
         //varying vec2 vUv;
         varying vec3 vNormal;
@@ -154,18 +159,17 @@
             float noise3=cnoise(vUv.xyx*14.8*scale1+21.2);
 
             float mask1=mix(mix(noise1,noise2,0.5),noise3,0.3);      
-            mask1=smoothstep(-0.1,0.2,mask1);
+            mask1=smoothstep(0.0,0.2,mask1);
 
             // sampleo la tierra a diferentes escalas
 
-            vec3 tierra1=texture2D(uSampler0,vUv*4.0*scale1).xyz;
-            vec3 tierra2=texture2D(uSampler0,vUv*2.77*scale1).xyz;
+            vec3 tierra1=texture2D(uSampler0,vUv*8.53*scale1).xyz;
 
             // sampleo la roca
             vec3 roca=texture2D(uSampler1,vUv*2.77*scale1).xyz;
 
             // combino tierra y roca usando la mascara 1
-            vec3 color2=mix(mix(tierra1,tierra2,0.5),roca,mask1);
+            vec3 color2=mix(tierra1,roca,mask1);
 
             // genero la mascara 2 a partir del ruido perlin
             float noise4=cnoise(vUv.xyx*8.23*scale1);

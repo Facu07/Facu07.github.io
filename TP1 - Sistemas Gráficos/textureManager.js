@@ -27,7 +27,6 @@ class TextureManager {
 
  	initTexture = function(texture_file){
             
-        //this.texture = gl.createTexture();
         var texture = gl.createTexture();
         texture.image = new Image();
 

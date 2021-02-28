@@ -37,7 +37,7 @@
             vec3 normal = aNormal;	
             vec2 uv = aUv;
                                    	
-           vec4 textureColor = texture2D(uSampler, vec2(uv.s, uv.t));         
+            vec4 textureColor = texture2D(uSampler, vec2(uv.s, uv.t));         
             
             // **************** EDITAR A PARTIR DE AQUI *******************************
 
