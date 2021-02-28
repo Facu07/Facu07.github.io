@@ -70,11 +70,11 @@ class Objeto3D{
         this.texture = texture;
     }
 
-	dibujar = function(matPadre){
+	dibujar = function(matPadre, isTextured){
 
 		var temp = mat4.create();
 		this.actualizarMatrices(matPadre, temp);
-		dibujarGeometria(this.malla, this.texture);
+		dibujarGeometria(this.malla, this.texture, isTextured);
 		for(var i = 0; i < this.hijos.length; i++){
 			this.hijos[i].dibujar(temp);
 		}

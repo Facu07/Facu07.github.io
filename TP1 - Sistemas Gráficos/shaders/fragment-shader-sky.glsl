@@ -23,7 +23,7 @@
             
         void main(void) {
 
-            // uSampler: agua
+            // uSampler: cielo
 
             vec4 textureColor = texture2D(uSampler, vec2(vUv.s, vUv.t));         
 

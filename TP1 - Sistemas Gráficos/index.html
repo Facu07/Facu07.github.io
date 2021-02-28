@@ -87,9 +87,9 @@
         var vertexShaderSkySource;
         var fragmentShaderSkySource;
 
-        var scale1=1;
-        var low=-0.5;
-        var high=0.5;
+        var scale1=3;
+        var low=0.1;
+        var high=-0.03;
 
         var matrizProyeccion = mat4.create();            
         var matrizVista = mat4.create();            
@@ -297,9 +297,9 @@
             shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
             shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
             shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-            shaderProgram.samplerUniform0 = gl.getUniformLocation(shaderProgram, "uSampler0");
             shaderProgram.samplerUniform1 = gl.getUniformLocation(shaderProgram, "uSampler1");
-            shaderProgram.samplerUniform2 = gl.getUniformLocation(shaderProgram, "uSampler2");
+            //shaderProgram.samplerUniform1 = gl.getUniformLocation(shaderProgram, "uSampler1");
+            //shaderProgram.samplerUniform2 = gl.getUniformLocation(shaderProgram, "uSampler2");
             shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
             shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
             shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
@@ -448,7 +448,7 @@
                 vec3.fromValues(0,1,0)
             );
 
-
+            var rotY = controlHelicopterio.getYaw();
             var rotacionY = vec3.fromValues(0,1,0)
             var rotacionX = vec3.fromValues(1,0,0)
 
@@ -458,9 +458,9 @@
                 	vec3.set(eye_point, 0, 0.4 - aumento, 0.4 - aumento);
         			vec3.set(at_point, 0, 0, 0);
         			mat4.lookAt(matrizVista, eye_point, at_point, up_point);
-        			mat4.rotateX(matrizVista, matrizVista, degToRad(rotarCamaraX));
-        			mat4.rotateY(matrizVista, matrizVista, degToRad(rotarCamaraY));
-                    mat4.rotate(matrizVista,matrizVista,Math.PI/2-rot[1],rotacionY)
+                    mat4.rotateX(matrizVista,matrizVista,(rotarCamaraX%360)*Math.PI/180)                    
+                    mat4.rotateY(matrizVista,matrizVista,(rotarCamaraY%360)*Math.PI/180)                     
+                    mat4.rotate(matrizVista,matrizVista,Math.PI/2-rotY,rotacionY)
                     var vector = vec3.fromValues(-pos[0],-pos[1],-pos[2])
                     mat4.translate(matrizVista,matrizVista,vector)
                     break;
@@ -485,8 +485,8 @@
 
             gl.useProgram(shaderProgram);
             setMatrixUniforms();
-            var pos = contenedorHelicoptero.getPosicion();
-            contenedorHelicoptero.actualizar(pos[0],pos[1]+0.28,pos[2]);
+            //var pos = contenedorHelicoptero.getPosicion();
+            //contenedorHelicoptero.actualizar(pos[0],pos[1]+0.28,pos[2]);
             contenedorHelicoptero.dibujar();
             plataformaHeli.dibujar();
 

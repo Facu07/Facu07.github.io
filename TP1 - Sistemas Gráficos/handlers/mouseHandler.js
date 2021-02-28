@@ -18,16 +18,7 @@ onmousemove = function(e){
             //console.log("rotarCamaraX", rotarCamaraX);
         }
     }
-
-    // Esto limita la camara para que no se de vuelta
-    if (rotarCamaraX > 90) {
-        rotarCamaraX = 90;
-    }
-    if (rotarCamaraX < -90) {
-        rotarCamaraX = -90;
-    }
-
-    
+ 
     mouseX = x;
     mouseY = y;
 }
