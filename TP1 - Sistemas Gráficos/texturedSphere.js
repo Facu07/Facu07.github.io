@@ -21,6 +21,7 @@ function TexturedSphere(latitude_bands, longitude_bands) {
 
     this.matrizModelado = mat4.create();
     this.texture = null;
+    this.reflectionTexture=null;
 
     this.initTexture = function(texture_file){
         var texture = gl.createTexture();
@@ -39,6 +40,23 @@ function TexturedSphere(latitude_bands, longitude_bands) {
         }
         texture.image.src = texture_file;
         this.texture = texture;
+    }
+
+    this.initReflectionTexture = function(texture_file){
+        var aux_texture = gl.createTexture();
+        this.reflectionTexture = aux_texture;
+        this.reflectionTexture.image = new Image();
+
+        this.reflectionTexture.image.onload = function () {
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.bindTexture(gl.TEXTURE_2D, aux_texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, aux_texture.image);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+        this.reflectionTexture.image.src = texture_file;
     }
 
     // Se generan los vertices para la esfera, calculando los datos para una esfera de radio 1
@@ -166,6 +184,12 @@ function TexturedSphere(latitude_bands, longitude_bands) {
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
         gl.uniform1i(shaderProgramSky.samplerUniform, 0);
+        gl.activeTexture(gl.TEXTURE0);
+        //if (useReflection) {
+            gl.uniform1f(shaderProgram.useReflectionUniform, 1.0);
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, this.reflectionTexture);
+            gl.uniform1i(shaderProgram.samplerUniformReflection, 1);
         
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.webgl_index_buffer);
 
