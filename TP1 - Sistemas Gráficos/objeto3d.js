@@ -14,6 +14,7 @@ class Objeto3D{
 		this.hijos=[];
 		this.rgb = [0,0,0];
 		this.texture = null;
+		this.reflectionTexture = null;
 	}
 
 	actualizarMatrices(matPadre, temp){
@@ -53,7 +54,8 @@ class Objeto3D{
 	initTexture = function(texture_file){
             
         var texture = gl.createTexture();
-        texture.image = new Image();
+        this.texture = texture;
+        this.texture.image = new Image();
 
         texture.image.onload = function () {
                //onTextureLoaded()
@@ -66,8 +68,24 @@ class Objeto3D{
     
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
-        texture.image.src = texture_file;
-        this.texture = texture;
+        this.texture.image.src = texture_file;
+    }
+
+    initReflectionTexture = function(texture_file){
+        var aux_texture = gl.createTexture();
+        this.reflectionTexture = aux_texture;
+        this.reflectionTexture.image = new Image();
+
+        this.reflectionTexture.image.onload = function () {
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.bindTexture(gl.TEXTURE_2D, aux_texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, aux_texture.image);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+        this.reflectionTexture.image.src = texture_file;
     }
 
 	dibujar = function(matPadre, isTextured){

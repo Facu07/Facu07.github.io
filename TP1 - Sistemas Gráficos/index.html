@@ -50,7 +50,7 @@
 
         var vertexShaderFile="vertex-shader.glsl";
         var vertexShaderFileEarth="vertex-shader-earth.glsl";
-        var vertexShaderFileEarth="vertex-shader-sky.glsl";
+        var vertexShaderFileSky="vertex-shader-sky.glsl";
         var modo="smooth"; // wireframe, smooth, edges
         var shaderProgram;
         var shaderProgramEarth;
@@ -69,8 +69,8 @@
         var $canvas=$("#myCanvas");
         var aspect=$canvas.width()/$canvas.height();
 
-        var distanciaCamara=0.5;
-        var alturaCamara=0.5;
+        var distanciaCamara=1.5;
+        var alturaCamara=1.0;
         var velocidadAngular=0.0;
         var filas = 40;
         var columnas = 40;
@@ -257,16 +257,17 @@
             gl.attachShader(shaderProgramSky, fragmentShaderSky);
             gl.linkProgram(shaderProgramSky);
 
+
             if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
-                alert("Could not initialise shaders");
+                alert("Could not initialise simple shaders");
             }
 
             if (!gl.getProgramParameter(shaderProgramEarth, gl.LINK_STATUS)) {
-                alert("Could not initialise shaders");
+                alert("Could not initialise earth shaders");
             }
 
             if (!gl.getProgramParameter(shaderProgramSky, gl.LINK_STATUS)) {
-                alert("Could not initialise shaders");
+                alert("Could not initialise sky shaders");
             }
     
             shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
@@ -276,13 +277,13 @@
             gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 
 
-
             shaderProgramEarth.vertexPositionAttribute = gl.getAttribLocation(shaderProgramEarth, "aPosition");
             gl.enableVertexAttribArray(shaderProgramEarth.vertexPositionAttribute);
             shaderProgramEarth.textureCoordAttribute = gl.getAttribLocation(shaderProgramEarth, "aUv");
             gl.enableVertexAttribArray(shaderProgramEarth.textureCoordAttribute);
             shaderProgramEarth.vertexNormalAttribute = gl.getAttribLocation(shaderProgramEarth, "aNormal");
             gl.enableVertexAttribArray(shaderProgramEarth.vertexNormalAttribute);
+            shaderProgramEarth.useReflectionUniform = gl.getUniformLocation(shaderProgramEarth, "uUseReflection");
 
             shaderProgramSky.vertexPositionAttribute = gl.getAttribLocation(shaderProgramSky, "aPosition");
             gl.enableVertexAttribArray(shaderProgramSky.vertexPositionAttribute);
@@ -290,7 +291,7 @@
             gl.enableVertexAttribArray(shaderProgramSky.textureCoordAttribute);
             shaderProgramSky.vertexNormalAttribute = gl.getAttribLocation(shaderProgramSky, "aNormal");
             gl.enableVertexAttribArray(shaderProgramSky.vertexNormalAttribute);
-    
+
 
             shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
             shaderProgram.mMatrixUniform = gl.getUniformLocation(shaderProgram, "uMMatrix");
@@ -298,10 +299,12 @@
             shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
             shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
             shaderProgram.samplerUniform1 = gl.getUniformLocation(shaderProgram, "uSampler1");
+            shaderProgram.samplerUniformReflection = gl.getUniformLocation(shaderProgram, "uSamplerReflectionMap");
             //shaderProgram.samplerUniform1 = gl.getUniformLocation(shaderProgram, "uSampler1");
             //shaderProgram.samplerUniform2 = gl.getUniformLocation(shaderProgram, "uSampler2");
             shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
             shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
+            shaderProgram.useColorUniform = gl.getUniformLocation(shaderProgram, "uUseColor");
             shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
             shaderProgram.lightingDirectionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
             shaderProgram.directionalColorUniform = gl.getUniformLocation(shaderProgram, "uDirectionalColor");
@@ -317,7 +320,6 @@
             shaderProgramEarth.samplerUniform0 = gl.getUniformLocation(shaderProgramEarth, "uSampler0");
             shaderProgramEarth.samplerUniform1 = gl.getUniformLocation(shaderProgramEarth, "uSampler1");
             shaderProgramEarth.samplerUniform2 = gl.getUniformLocation(shaderProgramEarth, "uSampler2");
-            shaderProgramEarth.samplerUniform3 = gl.getUniformLocation(shaderProgramEarth, "uSampler3");
             shaderProgramEarth.useLightingUniform = gl.getUniformLocation(shaderProgramEarth, "uUseLighting");
             shaderProgramEarth.ambientColorUniform = gl.getUniformLocation(shaderProgramEarth, "uAmbientColor");
             shaderProgramEarth.frameUniform = gl.getUniformLocation(shaderProgramEarth, "time");
@@ -397,7 +399,7 @@
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "scale1"), scale1);
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "low"), low);
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "high"), high);
-            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.30, 0.23, 0.19);//0.6, 0.6, 0.6 );
+            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.3, 0.3, 0.3);//0.30, 0.23, 0.19);
             gl.uniform3f(shaderProgramEarth.directionalColorUniform, 1.2, 1.1, 0.7);
             gl.uniform1i(shaderProgramEarth.useLightingUniform,(lighting=="true"));
 
@@ -419,6 +421,7 @@
             gl.uniform3f(shaderProgramSky.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
             gl.uniform3f(shaderProgramSky.diffusePrincipalColorUniform, 1.0, 1.0, 1.0);          //Difusa
             gl.uniform3f(shaderProgramSky.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular*/
+
             
             // Definimos la ubicación de la camara
 
@@ -438,6 +441,7 @@
 	                break;               
 	        	}
 	   		});
+
 
             var pos = contenedorHelicoptero.getPosicion();
             var rot = contenedorHelicoptero.getRotacion();
@@ -486,21 +490,16 @@
 
             gl.useProgram(shaderProgram);
             setMatrixUniforms();
-            //var pos = contenedorHelicoptero.getPosicion();
-            //contenedorHelicoptero.actualizar(pos[0],pos[1]+0.28,pos[2]);
             contenedorHelicoptero.dibujar();
             plataformaHeli.dibujar();
-
-            var pos = contenedorHelicoptero.getPosicion();
 
             gl.useProgram(shaderProgramSky);
             setMatrixUniformsSky();
             sky.dibujar();
+            agua.dibujar(pos[0],pos[2]);
 
             gl.useProgram(shaderProgramEarth);
             setMatrixUniformsEarth();
-
-            //agua.dibujar(pos[0],pos[2]);
             textureManager.dibujar(pos[0],pos[2]);
 
             
@@ -535,8 +534,6 @@
             
         function initMenu(){
             var gui = new dat.GUI();
-            gui.add(window, "distanciaCamara",0.01,2).step(0.01);
-            gui.add(window, "alturaCamara",-2,2).step(0.01);;
             gui.add(window, "modo",["wireframe","smooth","edges"]);
             gui.add(window,"scale1",0.1,3).step(0.01);
             gui.add(window,"low",-1,1).step(0.01);
@@ -558,22 +555,18 @@
             sky = new TexturedSphere(segmentos, segmentos)
             sky.initBuffers();
             sky.initTexture("img/sky_lightblue2.jpg");
-            //sky.initReflectionTexture("img/cielo1-refmap.jpg");
 
-            /*agua = new TextureManager(12);
-            agua.initParcelas(segmentos, segmentos, shaderProgramEarth);
-            agua.initTexture("img/aguaDeMar_normalMap.jpg");
+            agua = new TextureManager(12);
+            agua.initParcelas(segmentos, segmentos, shaderProgramSky, 1.0);
+            //agua.initTexture("img/aguaDeMar_normalMap.jpg");
             agua.initTexture("img/agua.jpg");
-            agua.initTexture("img/tierra.jpg");
-            agua.initTexture("img/roca.jpg");
-            agua.initReflectionTexture("img/cielo1-refmap.jpg");*/
+            agua.initReflectionTexture("img/cielo1-refmap.jpg");
 
             textureManager = new TextureManager(12); //
-            textureManager.initParcelas(segmentos, segmentos, shaderProgramEarth);
+            textureManager.initParcelas(segmentos, segmentos, shaderProgramEarth,0);
             textureManager.initTexture("img/heightmap.png");
             textureManager.initTexture("img/pasto.jpg");
             textureManager.initTexture("img/tierra.jpg");
-            textureManager.initTexture("img/agua.jpg");
             textureManager.initTexture("img/roca.jpg");
             textureManager.initReflectionTexture("img/cielo1-refmap.jpg");
 

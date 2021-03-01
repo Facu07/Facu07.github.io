@@ -23,9 +23,9 @@ function ControlHelicoptero(){
     var maxAltitude=300;
     var minAltitude=1.81;
 
-    var positionX=0;
-    var positionY=3;
-    var positionZ=0;
+    var positionX=5;
+    var positionY=5;
+    var positionZ=5;
 
     //var umbral=0.01;
 

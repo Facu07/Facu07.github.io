@@ -44,7 +44,7 @@ class Earth {
     // La esfera se renderizara utilizando triangulos, para ello se arma un buffer de índices 
     // a todos los triángulos de la esfera
 
-	initBuffers = function(i,j){
+	initBuffers = function(i,j,y){
     
         this.position_buffer = [];
         this.normal_buffer = [];
@@ -63,7 +63,7 @@ class Earth {
 
                 var x = ((latNumber/this.latitudeBands)*lado_parcela + i*lado_parcela - lado_parcela*fila_parcelas/2);
                 var z = ((longNumber/this.longitudeBands)*lado_parcela + j*lado_parcela - lado_parcela*fila_parcelas/2);
-                var y = 0;
+                var y = y;
 
                 var u = ((z+(lado_parcela*fila_parcelas)/2 )/ (lado_parcela*fila_parcelas));
                 var v = 1 - ((x+(lado_parcela*fila_parcelas)/2 )/ (lado_parcela*fila_parcelas)); 
@@ -156,10 +156,6 @@ class Earth {
         gl.activeTexture(gl.TEXTURE3);
         gl.bindTexture(gl.TEXTURE_2D, textures[3]);
         gl.uniform1i(this.shaderProgram.samplerUniform2, 3);
-
-        gl.activeTexture(gl.TEXTURE4);
-        gl.bindTexture(gl.TEXTURE_2D, textures[4]);
-        gl.uniform1i(this.shaderProgram.samplerUniform3, 4);
 
         if (useReflection) {
             //console.log("entro")

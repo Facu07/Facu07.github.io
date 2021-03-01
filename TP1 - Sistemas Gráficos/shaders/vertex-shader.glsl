@@ -36,7 +36,7 @@
 
         void main(void) {
                     
-            /*vec3 position = aPosition;		
+            vec3 position = aPosition;		
             vec3 normal = aNormal;	
             vec2 uv = aUv;
                                    	
@@ -48,9 +48,9 @@
 
             vWorldPosition=worldPos.xyz;              
             vNormal=normalize(uNMatrix * aNormal);
-            vUv=uv;	*/
+            vUv=uv;
 
-            vec3 position = aPosition;      
+            /*vec3 position = aPosition;      
             vec3 normal = aNormal;  
             vec2 uv = aUv;
                                     
@@ -84,7 +84,7 @@
              y las promedio
             */
             
-            
+            /*
             
             float angU=atan((masU.x-center.x)*amplitud,epsilon);
             float angV=atan((masV.x-center.x)*amplitud,epsilon);
@@ -106,5 +106,5 @@
             vec3 tan1=(gradV1+gradV2)/2.0;
             vec3 tan2=(gradU1+gradU2)/2.0;
             vNormal=cross(tan1,tan2);
-            vUv=uv; 
+            vUv=uv; */
         }

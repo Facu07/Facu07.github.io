@@ -12,13 +12,13 @@ class TextureManager {
 
 	}
 
-    initParcelas = function(latitude_bands, longitude_bands, shaderProgram){
+    initParcelas = function(latitude_bands, longitude_bands, shaderProgram, y){
 
         for (var i = 0; i < fila_parcelas; i ++) {
             var temp = []
             for (var j = 0; j < fila_parcelas; j++) {
                 var parcela = new Earth(latitude_bands, longitude_bands, shaderProgram);
-                parcela.initBuffers(i,j)
+                parcela.initBuffers(i,j,y)
                 temp.push(parcela);
             }
             this.arrayParcelas.push(temp);

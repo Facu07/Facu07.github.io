@@ -4,6 +4,7 @@
         attribute vec3 aPosition;   //posicion (x,y,z)
         attribute vec3 aNormal;     //vector normal (x,y,z)
         attribute vec2 aUv;         //coordenadas de texture (x,y)  x e y (en este caso) van de 0 a 1
+        attribute vec4 aTextureCoord;
 
         // variables Uniform (son globales a todos los vértices y de solo-lectura)
 
@@ -26,7 +27,11 @@
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
         //varying vec2 vUv;
-        varying highp vec2 vUv;     
+        varying highp vec2 vUv;
+        varying vec4 vTextureCoord;
+
+        uniform float uUseReflection;
+        varying float vUseReflection;   
         
         // constantes
         
@@ -40,6 +45,8 @@
             vec3 position = aPosition;		
             vec3 normal = aNormal;	
             vec2 uv = aUv;
+            // Coordenada de textura sin modificaciones
+            vTextureCoord = aTextureCoord;
                                    	
             vec4 center = texture2D(uSampler, vec2(uv.s, uv.t));                     
             vec4 masU = texture2D(uSampler, vec2(uv.s+epsilon, uv.t));  
@@ -93,5 +100,8 @@
             vec3 tan1=(gradV1+gradV2)/2.0;
             vec3 tan2=(gradU1+gradU2)/2.0;
             vNormal=cross(tan1,tan2);
-            vUv=uv;	
+            vUv=uv;
+            
+            // Indica si usa reflection.
+            vUseReflection = uUseReflection;
         }

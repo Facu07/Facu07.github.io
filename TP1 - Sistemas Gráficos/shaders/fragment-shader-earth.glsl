@@ -1,4 +1,4 @@
-        precision highp float;
+        precision mediump float;
 
 
         uniform float h1;
@@ -8,6 +8,9 @@
         //varying vec2 vUv;
         varying vec3 vNormal;
         varying vec3 vWorldPosition;
+        varying vec4 vTextureCoord;
+        varying vec3 vPosition;
+        varying float vUseReflection;
         
 
         uniform vec3 uAmbientColor;         // color de luz ambiente
@@ -19,19 +22,19 @@
         uniform vec3 uLightPosition2;        // posición de la luz   
 
         uniform bool uUseLighting;          // usar iluminacion si/no
+        uniform bool uUseColor;
 
         uniform sampler2D uSampler;
         uniform sampler2D uSampler0;
         uniform sampler2D uSampler1;
         uniform sampler2D uSampler2;
-        uniform sampler2D uSampler3;
+        uniform sampler2D uSamplerReflectionMap;
 
         varying highp vec2 vUv;
         
         uniform float scale1;
         uniform float low;
-        uniform float high;
-        
+        uniform float high;        
 
         
         // Perlin Noise                     
@@ -140,15 +143,10 @@
             // uSampler0: tierra
             // uSampler1: roca
             // uSampler2: pasto
-            // uSampler3: agua
 
-            //vec4 textureColor = texture2D(uSampler, vec2(vUv.s, vUv.t));
+            vec4 textureColor; // = texture2D(uSampler, vec2(vUv.s, vUv.t));
             vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
             vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
-
-            // sampleo el agua
-
-            vec3 agua=texture2D(uSampler3,vUv*0.11*scale1).xyz;
 
             // sampleo el pasto a diferentes escalas
 
@@ -175,7 +173,7 @@
             vec3 roca=texture2D(uSampler1,vUv*2.77*scale1).xyz;
 
             // combino tierra y roca usando la mascara 1
-            vec3 color2=mix(mix(tierra1,agua,-0.3),roca,mask1);
+            vec3 color2=mix(tierra1,roca,mask1);
 
             // genero la mascara 2 a partir del ruido perlin
             float noise4=cnoise(vUv.xyx*8.23*scale1);
@@ -186,17 +184,36 @@
             mask2=smoothstep(low,high,mask2);
 
             // combino color1 (tierra y rocas) con color2 a partir de la mascara2
-            vec3 color=mix(color1,color2,mask2); 
+            vec3 color=mix(color1,color2,mask2);
                 
-            //vec3 color=uAmbientColor;
+            //color+=uAmbientColor;
             color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
             color+=uDirectionalColor2*max(dot(vNormal,lightDirection2), 0.0);
             
-           
-            if (uUseLighting)
+            /*if (uUseColor) {
+                textureColor = vec4(vTextureCoord.rgb, 1.0);
+            } else {
+                textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+            }
+            gl_FragColor = vec4(textureColor.rgb * 1.0, textureColor.a);*/
+
+           if (uUseLighting){
                 gl_FragColor = vec4(color,1.0);
+                textureColor = vec4(color,1.0);
                 //gl_FragColor = vec4(vNormal,1.0);
-            else
+            }else{
                 gl_FragColor = vec4(0.7,0.7,0.7,1.0);
+                //textureColor = vec4(vUv.rgb, 1.0);
+            }
+
+            // Si utiliza reflexion
+            /*if (vTextureCoord[3] == 2.0 || vUseReflection == 1.0) {
+                vec3 view = normalize(position);
+                vec3 reflection = reflect(view, vNormal);
+                float m = 2.0 * sqrt( pow(reflection.x, 2.0) + pow(reflection.y, 2.0) + pow(reflection.z + 1.0, 2.0));
+                vec2 reflectionDir = reflection.xy / m + 0.5;
+                vec4 reflectionTexture = texture2D(uSamplerReflectionMap, reflectionDir);
+                gl_FragColor = vec4(mix(textureColor, reflectionTexture, 0.2).rgb * 1.0, textureColor.a); //vLightWeighting
+            }*/
             
         }
