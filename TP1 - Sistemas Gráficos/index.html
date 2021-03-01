@@ -317,6 +317,7 @@
             shaderProgramEarth.samplerUniform0 = gl.getUniformLocation(shaderProgramEarth, "uSampler0");
             shaderProgramEarth.samplerUniform1 = gl.getUniformLocation(shaderProgramEarth, "uSampler1");
             shaderProgramEarth.samplerUniform2 = gl.getUniformLocation(shaderProgramEarth, "uSampler2");
+            shaderProgramEarth.samplerUniform3 = gl.getUniformLocation(shaderProgramEarth, "uSampler3");
             shaderProgramEarth.useLightingUniform = gl.getUniformLocation(shaderProgramEarth, "uUseLighting");
             shaderProgramEarth.ambientColorUniform = gl.getUniformLocation(shaderProgramEarth, "uAmbientColor");
             shaderProgramEarth.frameUniform = gl.getUniformLocation(shaderProgramEarth, "time");
@@ -499,7 +500,7 @@
             gl.useProgram(shaderProgramEarth);
             setMatrixUniformsEarth();
 
-            agua.dibujar(pos[0],pos[2]);
+            //agua.dibujar(pos[0],pos[2]);
             textureManager.dibujar(pos[0],pos[2]);
 
             
@@ -557,20 +558,24 @@
             sky = new TexturedSphere(segmentos, segmentos)
             sky.initBuffers();
             sky.initTexture("img/sky_lightblue2.jpg");
-            sky.initReflectionTexture("img/cielo1-refmap.jpg");
+            //sky.initReflectionTexture("img/cielo1-refmap.jpg");
 
-            agua = new TextureManager(12);
+            /*agua = new TextureManager(12);
             agua.initParcelas(segmentos, segmentos, shaderProgramEarth);
             agua.initTexture("img/aguaDeMar_normalMap.jpg");
             agua.initTexture("img/agua.jpg");
-            //agua.initReflectionTexture("img/refmap2.jpg");
+            agua.initTexture("img/tierra.jpg");
+            agua.initTexture("img/roca.jpg");
+            agua.initReflectionTexture("img/cielo1-refmap.jpg");*/
 
             textureManager = new TextureManager(12); //
             textureManager.initParcelas(segmentos, segmentos, shaderProgramEarth);
             textureManager.initTexture("img/heightmap.png");
             textureManager.initTexture("img/pasto.jpg");
             textureManager.initTexture("img/tierra.jpg");
+            textureManager.initTexture("img/agua.jpg");
             textureManager.initTexture("img/roca.jpg");
+            textureManager.initReflectionTexture("img/cielo1-refmap.jpg");
 
 
             gl.clearColor(66.2, 0.2, 0.2, 1.0);

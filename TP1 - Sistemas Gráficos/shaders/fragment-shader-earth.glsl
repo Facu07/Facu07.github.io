@@ -24,6 +24,7 @@
         uniform sampler2D uSampler0;
         uniform sampler2D uSampler1;
         uniform sampler2D uSampler2;
+        uniform sampler2D uSampler3;
 
         varying highp vec2 vUv;
         
@@ -139,10 +140,15 @@
             // uSampler0: tierra
             // uSampler1: roca
             // uSampler2: pasto
+            // uSampler3: agua
 
             //vec4 textureColor = texture2D(uSampler, vec2(vUv.s, vUv.t));
             vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
             vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
+
+            // sampleo el agua
+
+            vec3 agua=texture2D(uSampler3,vUv*0.11*scale1).xyz;
 
             // sampleo el pasto a diferentes escalas
 
@@ -169,7 +175,7 @@
             vec3 roca=texture2D(uSampler1,vUv*2.77*scale1).xyz;
 
             // combino tierra y roca usando la mascara 1
-            vec3 color2=mix(tierra1,roca,mask1);
+            vec3 color2=mix(mix(tierra1,agua,-0.3),roca,mask1);
 
             // genero la mascara 2 a partir del ruido perlin
             float noise4=cnoise(vUv.xyx*8.23*scale1);

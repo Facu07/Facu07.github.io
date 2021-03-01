@@ -190,7 +190,7 @@ function TexturedSphere(latitude_bands, longitude_bands) {
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, this.reflectionTexture);
             gl.uniform1i(shaderProgram.samplerUniformReflection, 1);
-        
+       	//}
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.webgl_index_buffer);
 
         if (modo!="wireframe"){

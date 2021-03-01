@@ -6,7 +6,8 @@ class TextureManager {
 	constructor(parcela) {
 
         this.textures = [];
-
+        this.reflectiveTexture = null;
+        this.useReflection = false;
         this.arrayParcelas = []
 
 	}
@@ -46,6 +47,24 @@ class TextureManager {
         texture.image.src = texture_file;
     }
 
+    initReflectionTexture = function(texture_file){
+        var aux_texture = gl.createTexture();
+        aux_texture.image = new Image();
+        this.reflectiveTexture = aux_texture;
+        this.useReflection = true;
+        aux_texture.image.onload = function () {
+            gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+            gl.bindTexture(gl.TEXTURE_2D, aux_texture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, aux_texture.image);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
+            gl.generateMipmap(gl.TEXTURE_2D);
+            gl.bindTexture(gl.TEXTURE_2D, null);
+        }
+        aux_texture.image.src = texture_file;
+        this.reflectiveTexture = aux_texture;
+    }
+
     estaEnRango = function(k,w){
        if((k > 0 && k < fila_parcelas) && (w > 0 && w < fila_parcelas)){
             return true
@@ -56,7 +75,7 @@ class TextureManager {
 
                    
         if(this.estaEnRango(i-3,j-3)){
-            this.arrayParcelas[i-3][j-3].draw(this.textures);
+            this.arrayParcelas[i-3][j-3].draw(this.textures, this.reflectiveTexture, this.useReflection);
         }
     }
 
