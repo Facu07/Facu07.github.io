@@ -1,36 +1,24 @@
-precision mediump float;
+ precision mediump float;
 
-    varying vec4 vTextureCoord;
-    varying vec3 vPosition;
-    varying vec3 vmPosition;
-    varying vec3 vNormal;
-    varying vec3 vTangent;
-    varying vec3 vBinormal;
+        varying vec3 vNormal;
+        varying vec3 vWorldPosition;
+        varying vec3 vectorObjetoHastaCamara;
+        
 
-    varying float vUseReflection;
-    uniform bool uUseColor;
-    uniform bool uUseNormal;
-    uniform bool uUseIlumination;
-    uniform float uIluminationIntensity;
+        uniform vec3 uAmbientColor;         // color de luz ambiente
+        uniform vec3 uDirectionalColor;     // color de luz direccional
+        uniform vec3 uLightPosition;        // posición de la luz
+        
 
-    uniform vec3 uCameraPosition;
-    varying vec3 light_dir_normalized;
-    varying vec3 view_dir_normalized;
+        uniform vec3 uDirectionalColor2;    // color de luz direccional
+        uniform vec3 uLightPosition2;       // posición de la luz   
 
-    uniform sampler2D uSampler;
-    uniform sampler2D uSamplerReflectionMap;
-    uniform sampler2D uSamplerNormalMap;
-    uniform sampler2D uSamplerIluminationMap;
+        uniform bool uUseLighting;          // usar iluminacion si/no
 
-    uniform vec3 uAmbientColor;
-    uniform bool uUseLighting;
-    uniform bool uUsePunctualLights;
+        uniform sampler2D uSampler;
+        uniform sampler2D uSamplerReflectionMap;
 
-    // Sol: Direccional
-    uniform vec3 uPrincipalLightDirection;
-    uniform vec3 uPrincipalDiffuseColor;
-    uniform vec3 uPrincipalSpecularColor;
-    uniform float uPrincipalLightIntensity;
+        varying highp vec2 vUv;
 
     void main(void) {
         
