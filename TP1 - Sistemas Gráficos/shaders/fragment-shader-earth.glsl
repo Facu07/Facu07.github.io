@@ -146,6 +146,23 @@
           vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
           vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
 
+          // vector +Z
+          vec3 up=vec3(0.0,0.0,1.0);
+
+          // si upFactor==1 ambos vectores coinciden, si es 0 son ortogonales
+          float upFactor=max(0.0,dot(up,vNormal));
+
+          // remapeo upFactor para que suba de 0 a 1 entre 0.7 y 0.8 
+
+          // ejemplo de smoothstep: https://thebookofshaders.com/05/?lan=es
+          float a=smoothstep(0.75,0.8,upFactor); 
+          //Color nieve
+          vec3 colorNieve=vec3(0.93,0.93,1.0);
+          // la nieve se acumula a partir de cierta altura y en las zonas planas
+          float agujerosNieve=smoothstep(-1.0,0.2,cnoise(vWorldPosition*1.87))+smoothstep(-1.0,0.3,cnoise(32.23+vWorldPosition*0.21));
+          float mixNieve=min(1.0,smoothstep(h1,h2,vWorldPosition.z)*a*agujerosNieve);
+
+
           // sampleo el pasto a diferentes escalas
 
           vec3 pasto1=texture2D(uSampler2,vUv*2.3*scale1).xyz;
@@ -162,40 +179,47 @@
           float noise2=cnoise(vUv.xyx*11.77*scale1+9.45);
           float noise3=cnoise(vUv.xyx*14.8*scale1+21.2);
 
-            float mask1=mix(mix(noise1,noise2,0.5),noise3,0.3);      
-            mask1=smoothstep(0.0,0.2,mask1);
+          float mask1=mix(mix(noise1,noise2,0.5),noise3,0.3);      
+          mask1=smoothstep(0.0,0.2,mask1);
 
-            // sampleo la tierra a diferentes escalas
+          // sampleo la tierra a diferentes escalas
 
-            vec3 tierra1=texture2D(uSampler0,vUv*8.53*scale1).xyz;
+          vec3 tierra1=texture2D(uSampler0,vUv*8.53*scale1).xyz;
 
-            // sampleo la roca
-            vec3 roca=texture2D(uSampler1,vUv*2.77*scale1).xyz;
+          // sampleo la roca
+          vec3 roca=texture2D(uSampler1,vUv*2.77*scale1).xyz;
 
-            // combino tierra y roca usando la mascara 1
-            vec3 color2=mix(tierra1,roca,mask1);
+          // combino tierra y roca usando la mascara 1
+          vec3 color2=mix(tierra1,roca,mask1);
 
-            // genero la mascara 2 a partir del ruido perlin
-            float noise4=cnoise(vUv.xyx*8.23*scale1);
-            float noise5=cnoise(vUv.xyx*11.77*scale1);
-            float noise6=cnoise(vUv.xyx*14.8*scale1);
+          // genero la mascara 2 a partir del ruido perlin
+          float noise4=cnoise(vUv.xyx*8.23*scale1);
+          float noise5=cnoise(vUv.xyx*11.77*scale1);
+          float noise6=cnoise(vUv.xyx*14.8*scale1);
 
-            float mask2=mix(mix(noise4,noise5,0.5),noise6,0.3);             
-            mask2=smoothstep(low,high,mask2);
+          float mask2=mix(mix(noise4,noise5,0.5),noise6,0.3);             
+          mask2=smoothstep(low,high,mask2);
 
-            // combino color1 (tierra y rocas) con color2 a partir de la mascara2
-            vec3 color=mix(color1,color2,mask2);
-            
-            //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
-            color+=uAmbientColor;
-            color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
-            color+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection2), 0.0),32.0);
+          // combino color1 (tierra y rocas) con color2 a partir de la mascara2
+          vec3 color=mix(color1,color2,mask2);
 
-            // color difuso
-            vec3 lightVec=normalize(vec3(1.0,1.0,1.0));
-            float factorDifuso=max(0.8,dot(vNormal,lightVec)*1.1);
+          float mask3 =smoothstep(mask1,mask2,mixNieve);
+          //color+=mix(color,colorNieve,mask3);
 
-            gl_FragColor = vec4(color*factorDifuso,1.0); 
+          //vec3 color = vec3(0.0,0.0,0.0);
+
+          //color+=mix(color3,colorNieve,mask2);
+          
+          //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
+          color+=uAmbientColor;
+          color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
+          color+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection2), 0.0),32.0);
+
+          // color difuso
+          vec3 lightVec=normalize(vec3(1.0,1.0,1.0));
+          float factorDifuso=max(0.8,dot(vNormal,lightVec)*1.1);
+
+          gl_FragColor = vec4(color*factorDifuso,1.0); 
 
             
         }
