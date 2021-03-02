@@ -312,6 +312,8 @@
             shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
             gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
             shaderProgram.color = gl.getUniformLocation(shaderProgram, "RGB");
+            shaderProgram.textureCoordAttribute = gl.getAttribLocation(shaderProgram, "aUv");
+            gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
             shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aNormal");
             gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
 

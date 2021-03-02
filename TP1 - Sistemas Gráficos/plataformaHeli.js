@@ -4,7 +4,6 @@ class PlataformaHeli{
 
 		this.plataformaHeli = new Objeto3D(crearGeometria(new Plano(1,1), filas, columnas, true));
 		this.plataformaHeli.setPosicion(1,1.7,1)
-		//this.plataformaHeli.setColor(0.6,0.6,0.6);
 		this.plataformaHeli.initTexture("img/helipad.jpg");
 		this.tapaPlataformaHeli1 = new Objeto3D(crearGeometria(new Plano(1,1), filas, columnas, false));
 		this.tapaPlataformaHeli1.setRotacion(Math.PI/2,0,0)

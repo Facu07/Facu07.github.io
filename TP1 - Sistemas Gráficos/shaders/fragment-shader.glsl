@@ -25,9 +25,9 @@
 
             vec3 textureColor = texture2D(uSampler, vec2(vUv.s, vUv.t)).xyz;
 
-            /*textureColor+=uAmbientColor;
+            textureColor+=uAmbientColor;
             textureColor+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
-            textureColor+=uDirectionalColor2*max(dot(vNormal,lightDirection2), 0.0);*/
+            textureColor+=uDirectionalColor2*max(dot(vNormal,lightDirection2), 0.0);
             
             vec3 color=(uAmbientColor+uDirectionalColor*max(dot(vNormal,lightDirection), 0.0));
            
