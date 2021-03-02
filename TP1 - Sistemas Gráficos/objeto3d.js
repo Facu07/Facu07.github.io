@@ -12,7 +12,7 @@ class Objeto3D{
 		this.rotacion=vec3.create();
 		this.escala=vec3.fromValues(1,1,1);
 		this.hijos=[];
-		this.rgb = [0,0,0];
+		this.rgb = [2,2,2];
 		this.texture = null;
 		this.reflectionTexture = null;
 	}
@@ -53,9 +53,9 @@ class Objeto3D{
 
 	initTexture = function(texture_file){
             
+        gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
         var texture = gl.createTexture();
-        this.texture = texture;
-        this.texture.image = new Image();
+        texture.image = new Image();
 
         texture.image.onload = function () {
                //onTextureLoaded()
@@ -68,7 +68,8 @@ class Objeto3D{
     
             gl.bindTexture(gl.TEXTURE_2D, null);
         }
-        this.texture.image.src = texture_file;
+        texture.image.src = texture_file;
+        this.texture = texture;
     }
 
     initReflectionTexture = function(texture_file){

@@ -142,24 +142,30 @@ class Helicoptero {
 		this.pataIzq1 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 3, true), filas, columnas, false))
 		this.pataIzq1.setPosicion(-1.2,0.3,1.5)
 		this.pataIzq1.setRotacion(-Math.PI/12,0,0)
+		this.pataIzq1.setColor(0,0,0)
 		this.pataIzq2 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 2, true), filas, columnas, false))
 		this.pataIzq2.setPosicion(1.2,0,1.5)
 		this.pataIzq2.setRotacion(-Math.PI/12,0,0)
+		this.pataIzq2.setColor(0,0,0)
 		this.baseIzq = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 4, true), filas, columnas, false))
 
 		this.pataDer1 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 3, true), filas, columnas, false))
 		this.pataDer1.setPosicion(-1.2,0.3,-1.5)
 		this.pataDer1.setRotacion(Math.PI/12,0,0)
+		this.pataDer1.setColor(0,0,0)
 		this.pataDer2 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 2, true), filas, columnas, false))
 		this.pataDer2.setPosicion(1.2,0,-1.5)
 		this.pataDer2.setRotacion(Math.PI/12,0,0)
+		this.pataDer2.setColor(0,0,0)
 
 		this.baseDer = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 10, true), filas, columnas, false))
 		this.baseDer.setPosicion(1,-0.8,0)
 		this.baseDer.setRotacion(0,0,1.6)
+		this.baseDer.setColor(0,0,0)
 		this.baseIzq = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 10, true), filas, columnas, false))
 		this.baseIzq.setPosicion(1,-0.8,0)
 		this.baseIzq.setRotacion(0,0,1.6)
+		this.baseIzq.setColor(0,0,0)
 
 		this.dibujarColaIzq();
 

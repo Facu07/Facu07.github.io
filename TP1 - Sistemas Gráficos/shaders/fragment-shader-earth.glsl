@@ -34,7 +34,7 @@
         
         uniform float scale1;
         uniform float low;
-        uniform float high;        
+        uniform float high;     
 
         
         // Perlin Noise                     
@@ -140,28 +140,27 @@
 
         void main(void) {
 
-            // uSampler0: tierra
-            // uSampler1: roca
-            // uSampler2: pasto
-            //
+          // uSampler0: tierra
+          // uSampler1: roca
+          // uSampler2: pasto
+          vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
+          vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
 
-            vec4 textureColor; // = texture2D(uSampler, vec2(vUv.s, vUv.t));
-            vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
-            vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
+          // sampleo el pasto a diferentes escalas
 
-            // sampleo el pasto a diferentes escalas
+          vec3 pasto1=texture2D(uSampler2,vUv*2.3*scale1).xyz;
+          vec3 pasto2=texture2D(uSampler2,vUv*3.77*scale1).xyz;
+          vec3 pasto3=texture2D(uSampler2,vUv*2.11*scale1).xyz;
 
-            vec3 pasto1=texture2D(uSampler2,vUv*4.0*scale1).xyz;
-            vec3 pasto2=texture2D(uSampler2,vUv*3.77*scale1).xyz;
-            vec3 pasto3=texture2D(uSampler2,vUv*2.11*scale1).xyz;
+          // combino los 3 sampleos del pasto con la funcion de mezcla
+          //vec3 color1=mix(mix(pasto1,pasto2,0.5),pasto3,0.3);
+          vec3 color1=pasto2;
 
-            // combino los 3 sampleos del pasto con la funcion de mezcla
-            vec3 color1=mix(mix(pasto1,pasto2,0.5),pasto3,0.3);
-
-            // genero una mascara 1 a partir de ruido perlin
-            float noise1=cnoise(vUv.xyx*8.23*scale1+23.11);
-            float noise2=cnoise(vUv.xyx*11.77*scale1+9.45);
-            float noise3=cnoise(vUv.xyx*14.8*scale1+21.2);
+          // genero una mascara 1 a partir de ruido perlin
+          
+          float noise1=cnoise(vUv.xyx*8.23*scale1+23.11);
+          float noise2=cnoise(vUv.xyx*11.77*scale1+9.45);
+          float noise3=cnoise(vUv.xyx*14.8*scale1+21.2);
 
             float mask1=mix(mix(noise1,noise2,0.5),noise3,0.3);      
             mask1=smoothstep(0.0,0.2,mask1);
@@ -186,14 +185,17 @@
 
             // combino color1 (tierra y rocas) con color2 a partir de la mascara2
             vec3 color=mix(color1,color2,mask2);
-                
+            
+            //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
             color+=uAmbientColor;
             color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
-            color+=uDirectionalColor2*max(dot(vNormal,lightDirection2), 0.0);
-            
-     
-            //vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(vUv.s, vUv.t)).xyz/10.0;
+            color+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection2), 0.0),32.0);
 
-            gl_FragColor = vec4(color,1.0);
+            // color difuso
+            vec3 lightVec=normalize(vec3(1.0,1.0,1.0));
+            float factorDifuso=max(0.8,dot(vNormal,lightVec)*1.1);
+
+            gl_FragColor = vec4(color*factorDifuso,1.0); 
+
             
         }

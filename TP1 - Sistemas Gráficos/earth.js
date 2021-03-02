@@ -1,5 +1,5 @@
-var filas_parcelas = 8
-var lado_parcela = 7
+var filas_parcelas = 4
+var lado_parcela = 4
 
 class Earth {
 

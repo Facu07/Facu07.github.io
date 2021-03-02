@@ -1,11 +1,11 @@
 class PlataformaHeli{
 	
-	constructor(){
+	constructor(shaderProgram){
 
-		this.plataformaHeli = new Objeto3D(crearGeometria(new Plano(1,1), filas, columnas, false));
-		this.plataformaHeli.setPosicion(5,1.7,5)
-		this.plataformaHeli.setColor(0.6,0.6,0.6);
-		//this.plataformaHeli.initTexture("img/helipad.jpg");
+		this.plataformaHeli = new Objeto3D(crearGeometria(new Plano(1,1), filas, columnas, true));
+		this.plataformaHeli.setPosicion(1,1.7,1)
+		//this.plataformaHeli.setColor(0.6,0.6,0.6);
+		this.plataformaHeli.initTexture("img/helipad.jpg");
 		this.tapaPlataformaHeli1 = new Objeto3D(crearGeometria(new Plano(1,1), filas, columnas, false));
 		this.tapaPlataformaHeli1.setRotacion(Math.PI/2,0,0)
 		this.tapaPlataformaHeli1.setPosicion(0,-0.5,0.5)
@@ -33,7 +33,7 @@ class PlataformaHeli{
 
 	dibujar = function(){
 
-		this.plataformaHeli.dibujar(mat4.create(),false);
+		this.plataformaHeli.dibujar(mat4.create(),true);
 
 	}
 }

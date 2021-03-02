@@ -1,5 +1,5 @@
-var fila_parcelas = 12
-var lado_parcela = 12
+var fila_parcelas = 8
+var lado_parcela = 8
 
 class TextureManager {
 
@@ -74,8 +74,8 @@ class TextureManager {
     dibujarAlrrededor = function(i, j){
 
                    
-        if(this.estaEnRango(i-3,j-3)){
-            this.arrayParcelas[i-3][j-3].draw(this.textures, this.reflectiveTexture, this.useReflection);
+        if(this.estaEnRango(i-1,j-1)){
+            this.arrayParcelas[i-1][j-1].draw(this.textures, this.reflectiveTexture, this.useReflection);
         }
     }
 
@@ -85,8 +85,8 @@ class TextureManager {
         var tempi = Math.floor((x / lado_parcela) +lado_parcela)
         var tempj = Math.floor((z / lado_parcela) +lado_parcela)
 
-        for (var i = tempi; i <= tempi + 12; i++) {
-            for (var j = tempj; j <= (tempj+12); j++){
+        for (var i = tempi; i <= tempi + 3; i++) {
+            for (var j = tempj; j <= (tempj+3); j++){
                 this.dibujarAlrrededor(i,j)
             }
         }

@@ -84,7 +84,7 @@ function TexturedSphere(latitude_bands, longitude_bands, shaderProgram) {
                 var sinPhi = Math.sin(phi);
                 var cosPhi = Math.cos(phi);
 
-                var r=64;                        
+                var r=32;                        
 
                 var x = cosPhi * sinTheta*r;
                 var y = cosTheta*r;

@@ -3,7 +3,6 @@
         attribute vec3 aPosition;   //posicion (x,y,z)
         attribute vec3 aNormal;     //vector normal (x,y,z)
         attribute vec2 aUv;         //coordenadas de texture (x,y)  x e y (en este caso) van de 0 a 1
-        attribute vec4 aTextureCoord;
 
         // variables Uniform (son globales a todos los vértices y de solo-lectura)
 
@@ -28,7 +27,6 @@
         varying vec2 vUv;
         varying vec4 vTextureCoord;
         uniform float uUseReflection;
-        varying float vUseReflection;
         varying vec3 vectorObjetoHastaCamara;                             
         
         // constantes
@@ -38,36 +36,18 @@
 
         const float amplitud=4.0;
 
-    // Sol: Direccional
-    uniform vec3 uPrincipalLightDirection;
-    uniform vec3 uPrincipalDiffuseColor;
-    uniform vec3 uPrincipalSpecularColor;
-    uniform float uPrincipalLightIntensity;
+        // Sol: Direccional
+        uniform vec3 uPrincipalLightDirection;
+        uniform vec3 uPrincipalDiffuseColor;
+        uniform vec3 uPrincipalSpecularColor;
+        uniform float uPrincipalLightIntensity;
+        uniform vec3 uEyePoint;
+        uniform vec3 uSunPosition;
+
+        varying vec3 light_dir_normalized;
+        varying vec3 view_dir_normalized;
 
     void main(void) {
-        // Transformamos al vértice al espacio de la cámara
-        /*vec4 pos_camera_view = uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);
-
-        // Transformamos al vértice al espacio de la proyección
-        gl_Position = uProyMatrix * pos_camera_view;
-
-        vPosition = vec3(pos_camera_view) / pos_camera_view.w;
-
-        // Coordenada de textura sin modificaciones
-        /*vTextureCoord = aTextureCoord;
-
-        // Para normalMap
-        vNormal = normalize(uNormalMatrix * aVertexNormal);
-        vTangent = normalize(uNormalMatrix * aVertexTangent);
-        vBinormal = normalize(uNormalMatrix * aVertexBinormal);
-
-        vmPosition = (uModelMatrix * vec4(aVertexPosition, 1.0)).xyz;
-
-        light_dir_normalized = normalize(uSunPosition - vmPosition);
-        view_dir_normalized = normalize(uEyePoint - vmPosition);
-
-        // Indica si usa reflection.
-        vUseReflection = uUseReflection;*/
 
         vec3 position = aPosition;      
         vec3 normal = aNormal;  
@@ -79,9 +59,15 @@
         gl_Position = uPMatrix*uVMatrix*worldPos;
 
         vWorldPosition=worldPos.xyz;              
-        vNormal=normalize(uNMatrix * aNormal);
         vUv=uv;
 
-        // Indica si usa reflection.
-        vUseReflection = uUseReflection;
+        // Para normalMap
+        vNormal=normalize(uNMatrix * aNormal);
+        //vTangent = normalize(uNMatrix * aTangent);
+        //vBinormal = normalize(uNMatrix * aBinormal);
+
+        vWorldPosition = (uMMatrix * vec4(aPosition, 1.0)).xyz;
+
+        light_dir_normalized = normalize(uSunPosition - vWorldPosition);
+        view_dir_normalized = normalize(uEyePoint - vWorldPosition);
     }

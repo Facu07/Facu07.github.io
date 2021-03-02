@@ -28,10 +28,8 @@
         varying vec3 vNormal;
         //varying vec2 vUv;
         varying highp vec2 vUv;
-        varying vec4 vTextureCoord;
 
-        uniform float uUseReflection;
-        varying float vUseReflection;   
+
         
         // constantes
         
@@ -45,8 +43,7 @@
             vec3 position = aPosition;		
             vec3 normal = aNormal;	
             vec2 uv = aUv;
-            // Coordenada de textura sin modificaciones
-            vTextureCoord = aTextureCoord;
+
                                    	
             vec4 center = texture2D(uSampler, vec2(uv.s, uv.t));                     
             vec4 masU = texture2D(uSampler, vec2(uv.s+epsilon, uv.t));  
@@ -59,7 +56,8 @@
             // elevamos la coordenada Y
             position.y+=center.x*amplitud;
 
-            vec4 worldPos = uMMatrix*vec4(position, 1.0);                        
+            //Calculamos las coordenadas de vista-espacio
+            vec4 worldPos = uMMatrix*vec4(position, 1.0);
 
             gl_Position = uPMatrix*uVMatrix*worldPos;
 
@@ -101,7 +99,5 @@
             vec3 tan2=(gradU1+gradU2)/2.0;
             vNormal=cross(tan1,tan2);
             vUv=uv;
-            
-            // Indica si usa reflection.
-            vUseReflection = uUseReflection;
+
         }
