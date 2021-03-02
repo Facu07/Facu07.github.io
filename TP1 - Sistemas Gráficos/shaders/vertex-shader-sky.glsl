@@ -1,57 +1,73 @@
+    attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+    attribute vec3 aVertexTangent;
+    attribute vec3 aVertexBinormal;
+    attribute vec4 aTextureCoord;
 
-        // atributos del vértice (cada uno se alimenta de un ARRAY_BUFFER distinto)
+    uniform mat4 uViewMatrix;
+    uniform mat4 uModelMatrix;
+    uniform mat4 uProyMatrix;
+    uniform mat3 uNormalMatrix;
 
-        attribute vec3 aPosition;   //posicion (x,y,z)
-        attribute vec3 aNormal;     //vector normal (x,y,z)
-        attribute vec2 aUv;         //coordenadas de texture (x,y)  x e y (en este caso) van de 0 a 1
+    uniform vec3 uPunctual1LightPosition;
+    uniform vec3 uPunctual2LightPosition;
+    uniform vec3 uPunctual3LightPosition;
+    uniform vec3 uPunctual4LightPosition;
 
-        // variables Uniform (son globales a todos los vértices y de solo-lectura)
+    uniform vec3 uEyePoint;
+    uniform vec3 uSunPosition;
 
-        uniform mat4 uMMatrix;     // matriz de modelado
-        uniform mat4 uVMatrix;     // matriz de vista
-        uniform mat4 uPMatrix;     // matriz de proyección
-        uniform mat3 uNMatrix;     // matriz de normales
-                        
-        uniform float time;                 // tiempo en segundos
-        
-        uniform sampler2D uSampler;         // sampler de textura de la tierra
+    varying vec4 vTextureCoord;
+    varying vec3 vPosition;
+    varying vec3 vmPosition;
+    varying vec3 vNormal;
+    varying vec3 vTangent;
+    varying vec3 vBinormal;
 
-        // variables varying (comunican valores entre el vertex-shader y el fragment-shader)
-        // Es importante remarcar que no hay una relacion 1 a 1 entre un programa de vertices y uno de fragmentos
-        // ya que por ejemplo 1 triangulo puede generar millones de pixeles (dependiendo de su tamaño en pantalla)
-        // por cada vertice se genera un valor de salida en cada varying.
-        // Luego cada programa de fragmentos recibe un valor interpolado de cada varying en funcion de la distancia
-        // del pixel a cada uno de los 3 vértices. Se realiza un promedio ponderado
+    varying vec3 light_dir_normalized;
+    varying vec3 view_dir_normalized;
 
-        varying vec3 vWorldPosition;
-        varying vec3 vNormal;
-        varying vec2 vUv;                           
-        
-        // constantes
-        
-        const float PI=3.141592653;
+    uniform float uUseReflection;
+    varying float vUseReflection;
 
-        void main(void) {
-                    
-            vec3 position = aPosition;		
-            vec3 normal = aNormal;	
-            vec2 uv = aUv;
-                                   	
-            vec4 textureColor = texture2D(uSampler, vec2(uv.s, uv.t)); 
+    void main(void) {
+        // Transformamos al vértice al espacio de la cámara
+        /*vec4 pos_camera_view = uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);
 
-            if(textureColor.y < 0.2 && textureColor.z < 0.5 && textureColor.x < 0.5){
-                position+=normal*(1.0+sin(uv.x*18.0*PI+time*20.0))*0.03;
-                position+=normal*(1.0+sin(uv.y*18.0*PI+time*20.0))*0.03;
-            }
-            if(!(textureColor.y < 0.2) ){
-                position+=normal*0.12;
-            }        
+        // Transformamos al vértice al espacio de la proyección
+        gl_Position = uProyMatrix * pos_camera_view;
 
-            vec4 worldPos = uMMatrix*vec4(position, 1.0);                        
+        vPosition = vec3(pos_camera_view) / pos_camera_view.w;
 
-            gl_Position = uPMatrix*uVMatrix*worldPos;
+        // Coordenada de textura sin modificaciones
+        /*vTextureCoord = aTextureCoord;
 
-            vWorldPosition=worldPos.xyz;              
-            vNormal=normalize(uNMatrix * aNormal);
-            vUv=uv;	
-        }
+        // Para normalMap
+        vNormal = normalize(uNormalMatrix * aVertexNormal);
+        vTangent = normalize(uNormalMatrix * aVertexTangent);
+        vBinormal = normalize(uNormalMatrix * aVertexBinormal);
+
+        vmPosition = (uModelMatrix * vec4(aVertexPosition, 1.0)).xyz;
+
+        light_dir_normalized = normalize(uSunPosition - vmPosition);
+        view_dir_normalized = normalize(uEyePoint - vmPosition);
+
+        // Indica si usa reflection.
+        vUseReflection = uUseReflection;*/
+
+        vec3 position = aPosition;      
+        vec3 normal = aNormal;  
+        vec2 uv = aUv;
+                                
+        vec4 worldPos = uMMatrix*vec4(position, 1.0);                        
+        vec4 posMult = uVMatrix*worldPos;                        
+
+        gl_Position = uPMatrix*uVMatrix*worldPos;
+
+        vWorldPosition=worldPos.xyz;              
+        vNormal=normalize(uNMatrix * aNormal);
+        vUv=uv;
+
+        // Indica si usa reflection.
+        vUseReflection = uUseReflection;
+    }

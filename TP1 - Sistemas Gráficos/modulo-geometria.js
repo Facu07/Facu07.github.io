@@ -188,9 +188,9 @@ function generarSuperficie(superficie,filas,columnas){
             normalBuffer.push(nrm[2]);
 
             //if(textured){
-                var uvs=superficie.getCoordenadasTextura(u,v);
+                /*var uvs=superficie.getCoordenadasTextura(u,v);
                 uvBuffer.push(uvs[0]);
-                uvBuffer.push(uvs[1]);
+                uvBuffer.push(uvs[1]);*/
                 //texture_coord_buffer.push(u);
                 //texture_coord_buffer.push(v);
             //}

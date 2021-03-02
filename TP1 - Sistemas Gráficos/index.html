@@ -51,10 +51,12 @@
         var vertexShaderFile="vertex-shader.glsl";
         var vertexShaderFileEarth="vertex-shader-earth.glsl";
         var vertexShaderFileSky="vertex-shader-sky.glsl";
+        var vertexShaderFileSky="vertex-shader-water.glsl";
         var modo="smooth"; // wireframe, smooth, edges
         var shaderProgram;
         var shaderProgramEarth;
         var shaderProgramSky;
+        var shaderProgramWater;
         var time=0;
 
         var gl;
@@ -86,6 +88,9 @@
 
         var vertexShaderSkySource;
         var fragmentShaderSkySource;
+
+        var vertexShaderWaterSource;
+        var fragmentShaderWaterSource;
 
         var scale1=3;
         var low=0.1;
@@ -137,7 +142,7 @@
 
         function loadShaders(){
 
-            $.when(loadVS(),loadVSEarth(), loadVSSky(), loadFS(), loadFSEarth(), loadFSSky()).done(function(res1,res2){
+            $.when(loadVS(),loadVSEarth(), loadVSSky(), loadVSWater(), loadFS(), loadFSEarth(), loadFSSky(), loadFSWater()).done(function(res1,res2){
                 //this code is executed when all ajax calls are done     
                 webGLStart();
             });
@@ -167,7 +172,16 @@
                         vertexShaderSkySource=result;
                     }
                 });
-            }  
+            }
+
+            function loadVSWater() {
+                return  $.ajax({
+                    url: "shaders/vertex-shader-water.glsl",
+                    success: function(result){
+                        vertexShaderWaterSource=result;
+                    }
+                });
+            }
 
             function loadFS() {
                 return  $.ajax({
@@ -192,6 +206,15 @@
                     url: "shaders/fragment-shader-sky.glsl",
                     success: function(result){
                         fragmentShaderSkySource=result;
+                    }
+                });
+            }
+
+            function loadFSWater() {
+                return  $.ajax({
+                    url: "shaders/fragment-shader-water.glsl",
+                    success: function(result){
+                        fragmentShaderWaterSource=result;
                     }
                 });
             }
@@ -241,9 +264,13 @@
             var vertexShaderSky= getShader(gl, vertexShaderSkySource,"vertex");
             var fragmentShaderSky= getShader(gl, fragmentShaderSkySource,"fragment");
 
+            var vertexShaderWater= getShader(gl, vertexShaderWaterSource,"vertex");
+            var fragmentShaderWater= getShader(gl, fragmentShaderWaterSource,"fragment");
+
             shaderProgram = gl.createProgram();
             shaderProgramEarth = gl.createProgram();
             shaderProgramSky = gl.createProgram();
+            shaderProgramWater = gl.createProgram();
 
             gl.attachShader(shaderProgram, vertexShader);
             gl.attachShader(shaderProgram, fragmentShader);
@@ -257,6 +284,10 @@
             gl.attachShader(shaderProgramSky, fragmentShaderSky);
             gl.linkProgram(shaderProgramSky);
 
+            gl.attachShader(shaderProgramWater, vertexShaderWater);
+            gl.attachShader(shaderProgramWater, fragmentShaderWater);
+            gl.linkProgram(shaderProgramWater);
+
 
             if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
                 alert("Could not initialise simple shaders");
@@ -268,6 +299,10 @@
 
             if (!gl.getProgramParameter(shaderProgramSky, gl.LINK_STATUS)) {
                 alert("Could not initialise sky shaders");
+            }
+
+            if (!gl.getProgramParameter(shaderProgramWater, gl.LINK_STATUS)) {
+                alert("Could not initialise water shaders");
             }
     
             shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
@@ -291,6 +326,15 @@
             gl.enableVertexAttribArray(shaderProgramSky.textureCoordAttribute);
             shaderProgramSky.vertexNormalAttribute = gl.getAttribLocation(shaderProgramSky, "aNormal");
             gl.enableVertexAttribArray(shaderProgramSky.vertexNormalAttribute);
+            shaderProgramSky.useReflectionUniform = gl.getUniformLocation(shaderProgramSky, "uUseReflection");
+
+            shaderProgramWater.vertexPositionAttribute = gl.getAttribLocation(shaderProgramWater, "aPosition");
+            gl.enableVertexAttribArray(shaderProgramSky.vertexPositionAttribute);
+            shaderProgramWater.textureCoordAttribute = gl.getAttribLocation(shaderProgramWater, "aUv");
+            gl.enableVertexAttribArray(shaderProgramWater.textureCoordAttribute);
+            shaderProgramWater.vertexNormalAttribute = gl.getAttribLocation(shaderProgramWater, "aNormal");
+            gl.enableVertexAttribArray(shaderProgramWater.vertexNormalAttribute);
+            shaderProgramWater.useReflectionUniform = gl.getUniformLocation(shaderProgramWater, "uUseReflection");
 
 
             shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
@@ -298,10 +342,7 @@
             shaderProgram.vMatrixUniform = gl.getUniformLocation(shaderProgram, "uVMatrix");
             shaderProgram.nMatrixUniform = gl.getUniformLocation(shaderProgram, "uNMatrix");
             shaderProgram.samplerUniform = gl.getUniformLocation(shaderProgram, "uSampler");
-            shaderProgram.samplerUniform1 = gl.getUniformLocation(shaderProgram, "uSampler1");
-            shaderProgram.samplerUniformReflection = gl.getUniformLocation(shaderProgram, "uSamplerReflectionMap");
             //shaderProgram.samplerUniform1 = gl.getUniformLocation(shaderProgram, "uSampler1");
-            //shaderProgram.samplerUniform2 = gl.getUniformLocation(shaderProgram, "uSampler2");
             shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
             shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
             shaderProgram.useColorUniform = gl.getUniformLocation(shaderProgram, "uUseColor");
@@ -320,6 +361,7 @@
             shaderProgramEarth.samplerUniform0 = gl.getUniformLocation(shaderProgramEarth, "uSampler0");
             shaderProgramEarth.samplerUniform1 = gl.getUniformLocation(shaderProgramEarth, "uSampler1");
             shaderProgramEarth.samplerUniform2 = gl.getUniformLocation(shaderProgramEarth, "uSampler2");
+            shaderProgramEarth.samplerUniformReflection = gl.getUniformLocation(shaderProgramEarth, "uSamplerReflectionMap");
             shaderProgramEarth.useLightingUniform = gl.getUniformLocation(shaderProgramEarth, "uUseLighting");
             shaderProgramEarth.ambientColorUniform = gl.getUniformLocation(shaderProgramEarth, "uAmbientColor");
             shaderProgramEarth.frameUniform = gl.getUniformLocation(shaderProgramEarth, "time");
@@ -333,13 +375,29 @@
             shaderProgramSky.vMatrixUniform = gl.getUniformLocation(shaderProgramSky, "uVMatrix");
             shaderProgramSky.nMatrixUniform = gl.getUniformLocation(shaderProgramSky, "uNMatrix");
             shaderProgramSky.samplerUniform = gl.getUniformLocation(shaderProgramSky, "uSampler");
+            shaderProgramSky.samplerUniformReflection = gl.getUniformLocation(shaderProgramSky, "uSamplerReflectionMap");
             shaderProgramSky.useLightingUniform = gl.getUniformLocation(shaderProgramSky, "uUseLighting");
             shaderProgramSky.ambientColorUniform = gl.getUniformLocation(shaderProgramSky, "uAmbientColor");
             shaderProgramSky.frameUniform = gl.getUniformLocation(shaderProgramSky, "time");
             shaderProgramSky.lightingDirectionUniform = gl.getUniformLocation(shaderProgramSky, "uLightPosition");
             shaderProgramSky.directionalColorUniform = gl.getUniformLocation(shaderProgramSky, "uDirectionalColor");
             shaderProgramSky.lightingDirectionUniform2 = gl.getUniformLocation(shaderProgramSky, "uLightPosition2");
-            shaderProgramSky.directionalColorUniform2 = gl.getUniformLocation(shaderProgramSky, "uDirectionalColor2"); 
+            shaderProgramSky.directionalColorUniform2 = gl.getUniformLocation(shaderProgramSky, "uDirectionalColor2");
+
+            shaderProgramWater.pMatrixUniform = gl.getUniformLocation(shaderProgramWater, "uPMatrix");
+            shaderProgramWater.mMatrixUniform = gl.getUniformLocation(shaderProgramWater, "uMMatrix");
+            shaderProgramWater.vMatrixUniform = gl.getUniformLocation(shaderProgramWater, "uVMatrix");
+            shaderProgramWater.nMatrixUniform = gl.getUniformLocation(shaderProgramWater, "uNMatrix");
+            shaderProgramWater.samplerUniform = gl.getUniformLocation(shaderProgramWater, "uSampler");
+            //shaderProgramWater.samplerUniform1 = gl.getUniformLocation(shaderProgramWater, "uSampler1");
+            shaderProgramWater.useLightingUniform = gl.getUniformLocation(shaderProgramWater, "uUseLighting");
+            shaderProgramWater.ambientColorUniform = gl.getUniformLocation(shaderProgramWater, "uAmbientColor");
+            shaderProgramWater.useColorUniform = gl.getUniformLocation(shaderProgramWater, "uUseColor");
+            shaderProgramWater.frameUniform = gl.getUniformLocation(shaderProgramWater, "time");
+            shaderProgramWater.lightingDirectionUniform = gl.getUniformLocation(shaderProgramWater, "uLightPosition");
+            shaderProgramWater.directionalColorUniform = gl.getUniformLocation(shaderProgramWater, "uDirectionalColor");
+            shaderProgramWater.lightingDirectionUniform2 = gl.getUniformLocation(shaderProgramWater, "uLightPosition2");
+            shaderProgramWater.directionalColorUniform2 = gl.getUniformLocation(shaderProgramWater, "uDirectionalColor2");
         }
 
         function setMatrixUniforms() {
@@ -360,6 +418,13 @@
             
             gl.uniformMatrix4fv(shaderProgramSky.vMatrixUniform, false, matrizVista);
             gl.uniformMatrix4fv(shaderProgramSky.pMatrixUniform, false, matrizProyeccion);
+    
+        }
+
+        function setMatrixUniformsWater() {
+            
+            gl.uniformMatrix4fv(shaderProgramWater.vMatrixUniform, false, matrizVista);
+            gl.uniformMatrix4fv(shaderProgramWater.pMatrixUniform, false, matrizProyeccion);
     
         }
               
@@ -399,7 +464,7 @@
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "scale1"), scale1);
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "low"), low);
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "high"), high);
-            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.3, 0.3, 0.3);//0.30, 0.23, 0.19);
+            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.6,0.6,0.6);//0.30, 0.23, 0.19);
             gl.uniform3f(shaderProgramEarth.directionalColorUniform, 1.2, 1.1, 0.7);
             gl.uniform1i(shaderProgramEarth.useLightingUniform,(lighting=="true"));
 
@@ -422,7 +487,17 @@
             gl.uniform3f(shaderProgramSky.diffusePrincipalColorUniform, 1.0, 1.0, 1.0);          //Difusa
             gl.uniform3f(shaderProgramSky.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular*/
 
-            
+            gl.uniform1f(shaderProgramWater.frameUniform, time/10.0 );
+            gl.uniform3f(shaderProgramWater.ambientColorUniform, 0.6, 0.6, 0.6 );
+            gl.uniform3f(shaderProgramWater.directionalColorUniform, 1.2, 1.1, 0.7);
+            gl.uniform1i(shaderProgramWater.useLightingUniform,(lighting=="true"));
+
+            gl.uniform3fv(shaderProgramWater.lightingPrincipalDirectionUniform, sunPosition);
+            gl.uniform3fv(shaderProgramWater.sunPositionUniform, sunPosition);
+            gl.uniform1f(shaderProgramWater.lightPrincipalIntensity, 1.2);                         //Intensidad
+            gl.uniform3f(shaderProgramWater.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
+            gl.uniform3f(shaderProgramWater.diffusePrincipalColorUniform, 1.0, 1.0, 1.0);          //Difusa
+            gl.uniform3f(shaderProgramWater.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular*/
             // Definimos la ubicación de la camara
 
             $("body").keydown(function(e){
@@ -493,10 +568,13 @@
             contenedorHelicoptero.dibujar();
             plataformaHeli.dibujar();
 
+            gl.useProgram(shaderProgramWater);
+            setMatrixUniformsWater();
+            agua.dibujar(pos[0],pos[2]);
+
             gl.useProgram(shaderProgramSky);
             setMatrixUniformsSky();
             sky.dibujar();
-            agua.dibujar(pos[0],pos[2]);
 
             gl.useProgram(shaderProgramEarth);
             setMatrixUniformsEarth();
@@ -552,13 +630,12 @@
             controlHelicopterio=new ControlHelicoptero();
             contenedorHelicoptero = new Helicoptero();
 
-            sky = new TexturedSphere(segmentos, segmentos)
+            sky = new TexturedSphere(segmentos, segmentos, shaderProgramSky);
             sky.initBuffers();
-            sky.initTexture("img/sky_lightblue2.jpg");
+            sky.initTexture("img/cielo1.jpg");
 
             agua = new TextureManager(12);
-            agua.initParcelas(segmentos, segmentos, shaderProgramSky, 1.0);
-            //agua.initTexture("img/aguaDeMar_normalMap.jpg");
+            agua.initParcelas(segmentos, segmentos, shaderProgramWater, 1.0);
             agua.initTexture("img/agua.jpg");
             agua.initReflectionTexture("img/cielo1-refmap.jpg");
 
@@ -568,7 +645,6 @@
             textureManager.initTexture("img/pasto.jpg");
             textureManager.initTexture("img/tierra.jpg");
             textureManager.initTexture("img/roca.jpg");
-            textureManager.initReflectionTexture("img/cielo1-refmap.jpg");
 
 
             gl.clearColor(66.2, 0.2, 0.2, 1.0);

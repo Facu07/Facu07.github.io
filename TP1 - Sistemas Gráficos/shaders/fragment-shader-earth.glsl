@@ -143,6 +143,7 @@
             // uSampler0: tierra
             // uSampler1: roca
             // uSampler2: pasto
+            //
 
             vec4 textureColor; // = texture2D(uSampler, vec2(vUv.s, vUv.t));
             vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
@@ -186,34 +187,13 @@
             // combino color1 (tierra y rocas) con color2 a partir de la mascara2
             vec3 color=mix(color1,color2,mask2);
                 
-            //color+=uAmbientColor;
+            color+=uAmbientColor;
             color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
             color+=uDirectionalColor2*max(dot(vNormal,lightDirection2), 0.0);
             
-            /*if (uUseColor) {
-                textureColor = vec4(vTextureCoord.rgb, 1.0);
-            } else {
-                textureColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
-            }
-            gl_FragColor = vec4(textureColor.rgb * 1.0, textureColor.a);*/
+     
+            //vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(vUv.s, vUv.t)).xyz/10.0;
 
-           if (uUseLighting){
-                gl_FragColor = vec4(color,1.0);
-                textureColor = vec4(color,1.0);
-                //gl_FragColor = vec4(vNormal,1.0);
-            }else{
-                gl_FragColor = vec4(0.7,0.7,0.7,1.0);
-                //textureColor = vec4(vUv.rgb, 1.0);
-            }
-
-            // Si utiliza reflexion
-            /*if (vTextureCoord[3] == 2.0 || vUseReflection == 1.0) {
-                vec3 view = normalize(position);
-                vec3 reflection = reflect(view, vNormal);
-                float m = 2.0 * sqrt( pow(reflection.x, 2.0) + pow(reflection.y, 2.0) + pow(reflection.z + 1.0, 2.0));
-                vec2 reflectionDir = reflection.xy / m + 0.5;
-                vec4 reflectionTexture = texture2D(uSamplerReflectionMap, reflectionDir);
-                gl_FragColor = vec4(mix(textureColor, reflectionTexture, 0.2).rgb * 1.0, textureColor.a); //vLightWeighting
-            }*/
+            gl_FragColor = vec4(color,1.0);
             
         }

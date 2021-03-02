@@ -34,8 +34,8 @@
             color.z=0.0;*/
            
            if (uUseLighting)
-                gl_FragColor = vec4(textureColor,1.0);
-                //gl_FragColor = heliPad;
+                //gl_FragColor = vec4(textureColor,1.0);
+                gl_FragColor = vec4(color,1.0);
             else
                 gl_FragColor = vec4(0.7,0.7,0.7,1.0);
 

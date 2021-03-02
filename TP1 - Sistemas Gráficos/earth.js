@@ -158,11 +158,10 @@ class Earth {
         gl.uniform1i(this.shaderProgram.samplerUniform2, 3);
 
         if (useReflection) {
-            //console.log("entro")
             gl.uniform1f(shaderProgram.useReflectionUniform, 1.0);
-            gl.activeTexture(gl.TEXTURE5);
+            gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, reflectiveTexture);
-            gl.uniform1i(shaderProgram.samplerUniformReflection, 5);
+            gl.uniform1i(shaderProgram.samplerUniformReflection, 1);
         }
         
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.webgl_index_buffer);

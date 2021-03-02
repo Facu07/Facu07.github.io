@@ -38,10 +38,10 @@ class Helicoptero {
 		this.matricesNormales = discretizadorDeRecorrido(this.recorrido,filas);
 
 		this.SUPERFICIE = new SuperficieBarrido(this.formaDiscreta, this.matricesModelado, this.matricesNormales, filas, columnas, true);
-		this.cabina1 = new Objeto3D(crearGeometria(this.SUPERFICIE, filas, columnas, true));
+		this.cabina1 = new Objeto3D(crearGeometria(this.SUPERFICIE, filas, columnas, false));
 		this.cabina1.setPosicion(0,-2,0);
 		this.cabina1.setColor(0.84,0.81,0.7)
-		this.cabina1.initTexture("img/cabina.png");
+		//this.cabina1.initTexture("img/cabina.png");
 
 		this.forma1 = new CurvaBezier(controlFBase);
 		this.recorrido1 = new CurvaBezier(controlRBase);

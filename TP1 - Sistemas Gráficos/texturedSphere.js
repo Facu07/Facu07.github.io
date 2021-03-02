@@ -1,4 +1,4 @@
-function TexturedSphere(latitude_bands, longitude_bands) {
+function TexturedSphere(latitude_bands, longitude_bands, shaderProgram) {
 
     this.latitudeBands = latitude_bands;
     this.longitudeBands = longitude_bands;
@@ -22,6 +22,7 @@ function TexturedSphere(latitude_bands, longitude_bands) {
     this.matrizModelado = mat4.create();
     this.texture = null;
     this.reflectionTexture=null;
+    this.shaderProgramSky = shaderProgram;
 
     this.initTexture = function(texture_file){
         var texture = gl.createTexture();
@@ -154,7 +155,7 @@ function TexturedSphere(latitude_bands, longitude_bands) {
 
         this.matrizModelado = mat4.create();
         
-        gl.uniformMatrix4fv(shaderProgramSky.mMatrixUniform, false, this.matrizModelado);
+        gl.uniformMatrix4fv(this.shaderProgramSky.mMatrixUniform, false, this.matrizModelado);
 
         var normalMatrix = mat3.create();
         mat3.fromMat4(normalMatrix,this.matrizModelado);
@@ -163,7 +164,7 @@ function TexturedSphere(latitude_bands, longitude_bands) {
         mat3.invert(normalMatrix, normalMatrix);
         mat3.transpose(normalMatrix,normalMatrix);
 
-        gl.uniformMatrix3fv(shaderProgramSky.nMatrixUniform, false, normalMatrix);
+        gl.uniformMatrix3fv(this.shaderProgramSky.nMatrixUniform, false, normalMatrix);
     }
 
     this.dibujar = function(){
@@ -173,33 +174,32 @@ function TexturedSphere(latitude_bands, longitude_bands) {
     
         // Se configuran los buffers que alimentaron el pipeline
         gl.bindBuffer(gl.ARRAY_BUFFER, this.webgl_position_buffer);
-        gl.vertexAttribPointer(shaderProgramSky.vertexPositionAttribute, this.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(this.shaderProgramSky.vertexPositionAttribute, this.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.webgl_texture_coord_buffer);
-        gl.vertexAttribPointer(shaderProgramSky.textureCoordAttribute, this.webgl_texture_coord_buffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(this.shaderProgramSky.textureCoordAttribute, this.webgl_texture_coord_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
         gl.bindBuffer(gl.ARRAY_BUFFER, this.webgl_normal_buffer);
-        gl.vertexAttribPointer(shaderProgramSky.vertexNormalAttribute, this.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(this.shaderProgramSky.vertexNormalAttribute, this.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, this.texture);
-        gl.uniform1i(shaderProgramSky.samplerUniform, 0);
-        gl.activeTexture(gl.TEXTURE0);
-        //if (useReflection) {
-            gl.uniform1f(shaderProgram.useReflectionUniform, 1.0);
+        gl.uniform1i(this.shaderProgramSky.samplerUniform, 0);
+        /*if (useReflection) {
+            gl.uniform1f(this.shaderProgramSky.useReflectionUniform, 1.0);
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, this.reflectionTexture);
-            gl.uniform1i(shaderProgram.samplerUniformReflection, 1);
-       	//}
+            gl.uniform1i(this.shaderProgramSky.samplerUniformReflection, 1);
+       	}*/
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.webgl_index_buffer);
 
         if (modo!="wireframe"){
-            gl.uniform1i(shaderProgramSky.useLightingUniform,(lighting=="true"));                    
+            gl.uniform1i(this.shaderProgramSky.useLightingUniform,(lighting=="true"));                    
             gl.drawElements(gl.TRIANGLES, this.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
         }
         
         if (modo!="smooth") {
-            gl.uniform1i(shaderProgramSky.useLightingUniform,false);
+            gl.uniform1i(this.shaderProgramSky.useLightingUniform,false);
             gl.drawElements(gl.LINE_STRIP, this.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
         }
 
