@@ -25,11 +25,7 @@
 
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
-        varying vec2 vUv;
-        varying vec3 light_dir_normalized;
-        varying vec3 view_dir_normalized;
-        uniform vec3 uEyePoint;
-        uniform vec3 uSunPosition;                  
+        varying vec2 vUv;               
         
         // constantes
         
