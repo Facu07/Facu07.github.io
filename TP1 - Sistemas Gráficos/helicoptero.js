@@ -62,11 +62,13 @@ class Helicoptero {
 		this.cono1.setColor(1,1,1)
 
 		this.turbina1 = new Objeto3D(crearGeometria(new Dona(0.1,0.5), filas, columnas, false))
-		this.turbina1.setPosicion(0,1,-1)
-		this.turbina1.setEscala(5,2,1);
+		this.turbina1.setPosicion(0,1,-1.5)
+		this.turbina1.setEscala(8,25,2);
 		this.turbina1.setColor(1,0,0)
 
 		this.cilindro1 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 0.5, true), filas, columnas, false))
+		//this.cilindro1 = new Objeto3D(crearGeometria(this.SUPERFICIE1, filas, columnas, false));
+		//this.cilindro1.setEscala(0.05,0.05,0.05);
 		this.cilindro1.setColor(1,1,1)
 
 		this.dibujarHelices1()
@@ -84,8 +86,8 @@ class Helicoptero {
 		this.cono2.setColor(1,1,1)
 
 		this.turbina2 = new Objeto3D(crearGeometria(new Dona(0.1,0.5), filas, columnas, false))
-		this.turbina2.setPosicion(0,1,-1)
-		this.turbina2.setEscala(5,2,1);
+		this.turbina2.setPosicion(0,1,-1.5)
+		this.turbina2.setEscala(8,25,2);
 		this.turbina2.setRotacion(Math.PI,0,0);
 		this.turbina2.setColor(1,0,0)
 
@@ -107,8 +109,8 @@ class Helicoptero {
 		this.cono3.setColor(1,1,1)
 
 		this.turbina3 = new Objeto3D(crearGeometria(new Dona(0.1,0.5), filas, columnas, false))
-		this.turbina3.setPosicion(0,1,-1)
-		this.turbina3.setEscala(5,2,1);
+		this.turbina3.setPosicion(0,1,-1.5)
+		this.turbina3.setEscala(8,25,2);
 		this.turbina3.setColor(1,0,0)
 
 		this.cilindro3 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 0.5, true), filas, columnas, false))
@@ -130,8 +132,8 @@ class Helicoptero {
 		this.cono4.setColor(1,1,1)
 
 		this.turbina4 = new Objeto3D(crearGeometria(new Dona(0.1,0.5), filas, columnas, false))
-		this.turbina4.setPosicion(0,1,1)
-		this.turbina4.setEscala(5,2,1)
+		this.turbina4.setPosicion(0,1,1.5)
+		this.turbina4.setEscala(8,25,2);
 		this.turbina4.setColor(1,0,0)
 
 		this.cilindro4 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 0.5, true), filas, columnas, false))

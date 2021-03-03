@@ -6,10 +6,10 @@ onkeydown = function(evento){
     //Manejo del Zoom
     // Zoom '+'
     if ((teclaAscii == '107') || (teclaAscii == '171')) {
-        aumento = aumento + 0.1;
+        aumento = aumento + 0.01;
     }
     // Zoom '-'
     else if ((teclaAscii == '173') || (teclaAscii == '109')) {
-        aumento = aumento - 0.1;
+        aumento = aumento - 0.01;
     }
 }

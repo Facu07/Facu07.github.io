@@ -121,10 +121,6 @@ function TuboSenoidal(amplitud_onda, long_onda, radio, altura, conTapa) {
 
     this.getPosicion=function(u,v) {
 
-        /*if ((conTapa && v==0) || (conTapa && v == 1)) {  
-            return [0,0,0];         
-        }*/
-
         var delta = amplitud_onda*Math.cos(v*2*Math.PI/long_onda);
         var x = (radio + delta)*Math.cos(2*Math.PI*u);
         var z = (radio + delta)*Math.sin(2*Math.PI*u);
