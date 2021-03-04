@@ -42,6 +42,7 @@ class Helicoptero {
 		this.cabina1.setPosicion(0,-2,0);
 		this.cabina1.setColor(0.84,0.81,0.7)
 		this.cabina1.initTexture("img/cabina.png");
+		this.cabina1.initReflectionTexture("img/cabina-reflectividad.jpg");
 
 		this.forma1 = new CurvaBezier(controlFBase);
 		this.recorrido1 = new CurvaBezier(controlRBase);

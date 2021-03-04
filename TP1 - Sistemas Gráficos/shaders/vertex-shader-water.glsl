@@ -4,7 +4,6 @@
         attribute vec3 aPosition;   //posicion (x,y,z)
         attribute vec3 aNormal;     //vector normal (x,y,z)
         attribute vec2 aUv;         //coordenadas de texture (x,y)  x e y (en este caso) van de 0 a 1
-        attribute vec4 aTextureCoord;
 
         // variables Uniform (son globales a todos los vértices y de solo-lectura)
 
@@ -45,11 +44,24 @@
             vec3 normal = aNormal;	
             vec2 uv = aUv;
                                    	
+            // ************************************************************************
+
+            /*vec3 color = texture2D(uSampler, vec2(uv.s, uv.t)).xyz;
+
+            //if(color.y < 0.1 && color.z < 0.3 && color.x < 0.3){
+                position+=normal*(1.0+sin(uv.x*18.0*PI+time*20.0))*0.03;
+                position+=normal*(1.0+sin(uv.y*18.0*PI+time*20.0))*0.03;
+            //}
+            //if(!(color.y < 0.1) ){
+                position+=normal*0.12;
+            //}*/
+
+            // ************************************************************************
+
             vec4 worldPos = uMMatrix*vec4(position, 1.0);                        
             vec4 posMult = uVMatrix*worldPos; 
 
             vectorObjetoHastaCamara = normalize(-vec3(posMult) / posMult.w);
-
 
             gl_Position = uPMatrix*uVMatrix*worldPos;
 

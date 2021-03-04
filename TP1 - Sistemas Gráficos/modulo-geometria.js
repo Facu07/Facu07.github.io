@@ -251,7 +251,7 @@ function generarSuperficie(superficie,filas,columnas){
     }
 }
 
-function dibujarMalla(mallaDeTriangulos, textura, isTextured){
+function dibujarMalla(mallaDeTriangulos, textura, reflectiveTexture){
     
     // Se configuran los buffers que alimentaron el pipeline
     gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_position_buffer);
@@ -266,6 +266,15 @@ function dibujarMalla(mallaDeTriangulos, textura, isTextured){
         gl.uniform1i(shaderProgram.samplerUniform, 0);
     }else{
         gl.uniform1i(shaderProgram.useColorUniform, true);
+    }
+
+    if(reflectiveTexture != null){
+        gl.uniform1i(shaderProgram.useReflectionUniform, true);
+        gl.activeTexture(gl.TEXTURE1);
+        gl.bindTexture(gl.TEXTURE_2D, reflectiveTexture);
+        gl.uniform1i(shaderProgram.samplerUniform, 1);
+    }else{
+        gl.uniform1i(shaderProgram.useReflectionUniform, false);
     }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_normal_buffer);

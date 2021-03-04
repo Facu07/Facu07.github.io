@@ -8,15 +8,16 @@
 
         uniform vec3 uAmbientColor;         // color de luz ambiente
         uniform vec3 uDirectionalColor;	    // color de luz direccional
-        uniform vec3 uDirectionalColor2;     // color de luz direccional2
+        uniform vec3 uDirectionalColor2;    // color de luz direccional2
         uniform vec3 uLightPosition;        // posición de la luz
-        uniform vec3 uLightPosition2;        // posición de la luz2
+        uniform vec3 uLightPosition2;       // posición de la luz2
         uniform vec3 RGB;
         
-        uniform bool uUseLighting;          // usar iluminacion si/no
+        uniform bool uUseReflection;        // usar refleccion si/no
         uniform bool uUseColor;             // usar color si/no
 
         uniform sampler2D uSampler;
+        uniform sampler2D uSamplerReflectionMap;
 
         void main(void) {
 
@@ -28,6 +29,13 @@
             textureColor+=uAmbientColor;
             textureColor+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
             textureColor+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection2), 0.0),32.0);
+
+            vec3 vectorReflectado = reflect(lightDirection*lightDirection2, -vNormal);
+            float r=sqrt(pow(vectorReflectado.x,2.0)+pow(vectorReflectado.y,2.0)+pow(vectorReflectado.z,2.0));
+            float alfa=atan(vectorReflectado.y/vectorReflectado.x);
+            float beta=acos(vectorReflectado.z/r);
+            
+            vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta)).xyz;
 
             float factorDifuso=max(0.8,dot(vNormal,uDirectionalColor)*1.1);
             
@@ -46,5 +54,9 @@
                 gl_FragColor = vec4(color,1.0);
             else
                 gl_FragColor = vec4(textureColor,1.0);
+
+            if(uUseReflection){
+                gl_FragColor = vec4(textureColor+colorRefleccion,1.0);
+            }
             
         }

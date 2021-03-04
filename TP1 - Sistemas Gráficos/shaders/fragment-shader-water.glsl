@@ -36,10 +36,10 @@
             color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
             color+=uDirectionalColor2*max(dot(vNormal,lightDirection2), 0.0);  
 
-            vec3 vectorReflectado = reflect(vectorObjetoHastaCamara, -vNormal);
+            vec3 vectorReflectado = reflect(vectorObjetoHastaCamara+lightDirection, -vNormal);
             float r=sqrt(pow(vectorReflectado.x,2.0)+pow(vectorReflectado.y,2.0)+pow(vectorReflectado.z,2.0));
-            float alfa=atan(vectorReflectado.y/vectorReflectado.x);
-            float beta=acos(vectorReflectado.z/r);
+            float alfa=atan(vectorReflectado.y/vectorReflectado.x)*0.03;
+            float beta=acos(vectorReflectado.z/r)*0.03;
             
             vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta)).xyz;
 

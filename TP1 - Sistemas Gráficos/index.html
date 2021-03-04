@@ -277,6 +277,7 @@
             gl.enableVertexAttribArray(shaderProgram.textureCoordAttribute);
             shaderProgram.vertexNormalAttribute = gl.getAttribLocation(shaderProgram, "aNormal");
             gl.enableVertexAttribArray(shaderProgram.vertexNormalAttribute);
+            shaderProgram.useReflectionUniform = gl.getUniformLocation(shaderProgram, "uUseReflection");
 
 
             shaderProgramEarth.vertexPositionAttribute = gl.getAttribLocation(shaderProgramEarth, "aPosition");

@@ -93,7 +93,7 @@ class Objeto3D{
 
 		var temp = mat4.create();
 		this.actualizarMatrices(matPadre, temp);
-		dibujarGeometria(this.malla, this.texture, isTextured);
+		dibujarGeometria(this.malla, this.texture, this.reflectionTexture);
 		for(var i = 0; i < this.hijos.length; i++){
 			this.hijos[i].dibujar(temp);
 		}
