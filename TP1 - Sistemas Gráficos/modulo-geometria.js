@@ -46,6 +46,8 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
     }
 
     this.getCoordenadasTextura=function(u,v){
+        u = niveles - niveles*(filas / (3*columnas - 2 - 1));
+        v = vertices - vertices*(columnas / (filas - 1));
         return [u,v];
     }
 }
@@ -112,6 +114,9 @@ function Dona(radio, trayecto) {
     }
 
     this.getCoordenadasTextura=function(u,v) {
+        u = 1.0 - (filas / (columnas - 1));
+        v = 1.0 - trayecto;
+        return [u,v];
         return [u,v];
     }
 }
@@ -157,6 +162,8 @@ function TuboSenoidal(amplitud_onda, long_onda, radio, altura, conTapa) {
     }
 
     this.getCoordenadasTextura=function(u,v) {
+        u = 1.0 - (filas / (columnas - 1));
+        v = 1.0 - altura;
         return [u,v];
     }
 }

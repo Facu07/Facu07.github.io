@@ -35,7 +35,7 @@
             float alfa=atan(vectorReflectado.y/vectorReflectado.x);
             float beta=acos(vectorReflectado.z/r);
             
-            vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta)).xyz;
+            vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta)).xyz*0.3;
 
             float factorDifuso=max(0.8,dot(vNormal,uDirectionalColor)*1.1);
             
@@ -56,7 +56,8 @@
                 gl_FragColor = vec4(textureColor,1.0);
 
             if(uUseReflection){
-                gl_FragColor = vec4(textureColor+colorRefleccion,1.0);
+                //gl_FragColor = vec4(textureColor+colorRefleccion,1.0);
+                gl_FragColor = vec4(mix(textureColor*3.0, colorRefleccion, 0.5).rgb, 1.0);
             }
             
         }
