@@ -307,6 +307,7 @@
             shaderProgram.useLightingUniform = gl.getUniformLocation(shaderProgram, "uUseLighting");
             shaderProgram.ambientColorUniform = gl.getUniformLocation(shaderProgram, "uAmbientColor");
             shaderProgram.useColorUniform = gl.getUniformLocation(shaderProgram, "uUseColor");
+            shaderProgram.usePhongLighting = gl.getUniformLocation(shaderProgram, "uUsePhong");
             shaderProgram.frameUniform = gl.getUniformLocation(shaderProgram, "time");
             shaderProgram.lightingDirectionUniform = gl.getUniformLocation(shaderProgram, "uLightPosition");
             shaderProgram.directionalColorUniform = gl.getUniformLocation(shaderProgram, "uDirectionalColor");
@@ -396,10 +397,10 @@
             gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
 
             gl.uniform3fv(shaderProgram.lightingDirectionUniform, sunPosition);
-            gl.uniform3fv(shaderProgram.sunPositionUniform, sunPosition);
+            gl.uniform3fv(shaderProgram.lightingDirectionUniform2, sunPosition);
             gl.uniform1f(shaderProgram.lightPrincipalIntensity, 1.2);                         //Intensidad
             gl.uniform3f(shaderProgram.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
-            gl.uniform3f(shaderProgram.diffusePrincipalColorUniform, 1.0, 1.0, 1.0);          //Difusa
+            gl.uniform3f(shaderProgram.directionalColorUniform2, 1.0, 1.0, 1.0);              //Difusa
             gl.uniform3f(shaderProgram.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular
 
             gl.uniform1f(shaderProgramEarth.frameUniform, time/10.0 );
@@ -411,10 +412,10 @@
             gl.uniform1i(shaderProgramEarth.useLightingUniform,(lighting=="true"));
 
             gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform, sunPosition);
-            gl.uniform3fv(shaderProgramEarth.sunPositionUniform, sunPosition);
+            gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform2, sunPosition);
             gl.uniform1f(shaderProgramEarth.lightPrincipalIntensity, 1.2);                         //Intensidad
             gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
-            gl.uniform3f(shaderProgramEarth.diffusePrincipalColorUniform, 1.0, 1.0, 1.0);          //Difusa
+            gl.uniform3f(shaderProgramEarth.directionalColorUniform2, 1.0, 1.0, 1.0);              //Difusa
             gl.uniform3f(shaderProgramEarth.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular
 
             gl.uniform1f(shaderProgramWater.frameUniform, time/10.0 );
@@ -423,10 +424,10 @@
             gl.uniform1i(shaderProgramWater.useLightingUniform,(lighting=="true"));
 
             gl.uniform3fv(shaderProgramWater.lightingDirectionUniform, sunPosition);
-            gl.uniform3fv(shaderProgramWater.sunPositionUniform, sunPosition);
+            gl.uniform3fv(shaderProgramWater.lightingDirectionUniform2, sunPosition);
             gl.uniform1f(shaderProgramWater.lightPrincipalIntensity, 1.2);                         //Intensidad
             gl.uniform3f(shaderProgramWater.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
-            gl.uniform3f(shaderProgramWater.diffusePrincipalColorUniform, 1.0, 1.0, 1.0);          //Difusa
+            gl.uniform3f(shaderProgramWater.directionalColorUniform2, 1.0, 1.0, 1.0);              //Difusa
             gl.uniform3f(shaderProgramWater.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular*/
             // Definimos la ubicación de la camara
 

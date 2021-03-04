@@ -276,12 +276,14 @@ function dibujarMalla(mallaDeTriangulos, textura, reflectiveTexture){
     }
 
     if(reflectiveTexture != null){
+        gl.uniform1i(shaderProgram.usePhongLighting, true);
         gl.uniform1i(shaderProgram.useReflectionUniform, true);
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, reflectiveTexture);
         gl.uniform1i(shaderProgram.samplerUniformReflection, 1);
     }else{
         gl.uniform1i(shaderProgram.useReflectionUniform, false);
+        gl.uniform1i(shaderProgram.usePhongLighting, false);
     }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_normal_buffer);

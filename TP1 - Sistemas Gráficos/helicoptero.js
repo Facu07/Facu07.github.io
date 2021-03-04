@@ -187,10 +187,15 @@ class Helicoptero {
 		this.baseDer.setPosicion(1,-0.8,0)
 		this.baseDer.setRotacion(0,0,1.6)
 		this.baseDer.setColor(0,0,0)
+		this.baseDer.initTexture(null);
+		this.baseDer.initReflectionTexture("img/cielo1.jpg");
+
 		this.baseIzq = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.09, 10, true), filas, columnas, false))
 		this.baseIzq.setPosicion(1,-0.8,0)
 		this.baseIzq.setRotacion(0,0,1.6)
 		this.baseIzq.setColor(0,0,0)
+		this.baseIzq.initTexture(null);
+		this.baseIzq.initReflectionTexture("img/cielo1.jpg");
 
 		this.dibujarColaIzq();
 

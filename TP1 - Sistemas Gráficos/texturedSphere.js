@@ -171,6 +171,7 @@ function TexturedSphere(latitude_bands, longitude_bands, shaderProgram) {
     this.dibujar = function(){
         // Se configuran los buffers que alimentarán el pipeline
 
+        gl.uniform1i(shaderProgram.usePhongLighting, false);
         gl.uniform1i(shaderProgram.useColorUniform, false);
         
         this.actualizarMatrices();

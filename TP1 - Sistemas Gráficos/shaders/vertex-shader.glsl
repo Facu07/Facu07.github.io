@@ -26,10 +26,11 @@
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
         varying vec3 pos_camera_view;
-        varying vec2 vUv;               
+        varying vec2 vUv;  
+        varying vec3 N;   
+        varying vec3 Position;          
         
-        // constantes
-        
+        // constantes        
         const float PI=3.141592653;
         const float epsilon=0.01;
         const float amplitud=4.0;
@@ -40,6 +41,20 @@
             vec3 position = aPosition;      
             vec3 normal = aNormal;  
             vec2 uv = aUv;
+
+            vec4 ecPosition = uVMatrix * vec4(aPosition, 1.0) ;
+            Position = vec3(ecPosition) ;
+            N = normalize(uNMatrix * normal);
+            //gl_Position = uPMatrix * ecPosition;
+
+
+            vec4 center = texture2D(uSampler, vec2(uv.s, uv.t));                     
+            vec4 masU = texture2D(uSampler, vec2(uv.s+epsilon, uv.t));  
+            vec4 masV = texture2D(uSampler, vec2(uv.s, uv.t+epsilon));  
+
+            vec4 menosU = texture2D(uSampler, vec2(uv.s-epsilon, uv.t));  
+            vec4 menosV = texture2D(uSampler, vec2(uv.s, uv.t-epsilon));
+
 
             vec4 textureColor = texture2D(uSampler, vec2(uv.s, uv.t));
 
@@ -53,6 +68,25 @@
 
             vWorldPosition = worldPos.xyz;
 
-            vNormal = normalize(uNMatrix*aNormal);
+            float angU=atan((masU.x-center.x)*amplitud,epsilon);
+            float angV=atan((masV.x-center.x)*amplitud,epsilon);
+
+            // tangentes en U y en V
+            vec3 gradU1=vec3(cos(angU),sin(angU),0.0);
+            vec3 gradV1=vec3(0.0      ,sin(angV),cos(angV));
+            
+            angU=atan((center.x-menosU.x)*amplitud,epsilon);
+            angV=atan((center.x-menosV.x)*amplitud,epsilon);
+
+            // segundo conjunto de tangentes en U y en V
+            vec3 gradU2=vec3(cos(angU),sin(angU),0.0);
+            vec3 gradV2=vec3(0.0      ,sin(angV),cos(angV));
+            
+            // calculo el producto vectorial
+            vec3 tan1=(gradV1+gradV2)/2.0;
+            vec3 tan2=(gradU1+gradU2)/2.0;
+            vNormal=cross(tan1,tan2);
+
+            //vNormal = normalize(uNMatrix*aNormal);
             vUv = uv;
         }

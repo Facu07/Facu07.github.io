@@ -32,10 +32,8 @@
 
         
         // constantes
-        
         const float PI=3.141592653;
         const float epsilon=0.01;
-
         const float amplitud=4.0;
 
         void main(void) {
@@ -91,8 +89,6 @@
             // segundo conjunto de tangentes en U y en V
             vec3 gradU2=vec3(cos(angU),sin(angU),0.0);
             vec3 gradV2=vec3(0.0      ,sin(angV),cos(angV));
-
-
             
             // calculo el producto vectorial
             vec3 tan1=(gradV1+gradV2)/2.0;
