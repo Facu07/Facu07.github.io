@@ -50,8 +50,8 @@
 
 
             vec3 n = normalize(N);
-            vec3 L = vec3(normalize(vec3(500.0,300.0,-500.0) - Position));
-            vec3 V = normalize(vec3(-Position));
+            vec3 L = vec3(normalize(vec3(500.0,300.0,-500.0) - pos_camera_view));
+            vec3 V = normalize(vec3(pos_camera_view));
             vec4 prueba = phong(n, L, V);
 
             vec3 lightDirection= -normalize(uLightPosition - vec3(vWorldPosition));
