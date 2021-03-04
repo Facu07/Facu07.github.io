@@ -42,7 +42,7 @@
             color+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection2), 0.0),32.0);
 
             // Utilizo color o textura
-            if (uUseColor)//RGB.x > 1.1)
+            if (uUseColor)
                 gl_FragColor = vec4(color,1.0);
             else
                 gl_FragColor = vec4(textureColor,1.0);

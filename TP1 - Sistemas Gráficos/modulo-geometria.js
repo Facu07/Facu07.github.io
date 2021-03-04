@@ -254,7 +254,7 @@ function dibujarMalla(mallaDeTriangulos, textura, isTextured){
     gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_position_buffer);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, mallaDeTriangulos.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
-    if(isTextured){
+    if(textura != null){
         //console.log(textura)
         gl.uniform1i(shaderProgram.useColorUniform, false);
         gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_uvs_buffer);
