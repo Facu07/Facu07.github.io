@@ -23,12 +23,9 @@ function TexturedSphere(latitude_bands, longitude_bands, shaderProgram) {
     this.texture = null;
     this.reflectionTexture=null;
     this.shaderProgram = shaderProgram;
-    this.rgb = [2,2,2];
 
     this.initTexture = function(texture_file){
 
-        this.rgb = [2,2,2];
-        console.log(this.rgb);
         var texture = gl.createTexture();
         texture.image = new Image();
 

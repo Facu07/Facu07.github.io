@@ -66,10 +66,7 @@ class Helicoptero {
 		this.turbina1.setEscala(8,25,2);
 		this.turbina1.setColor(1,0,0)
 
-		this.cilindro1 = new Objeto3D(crearGeometria(this.SUPERFICIE1, filas, columnas, false));
-		this.cilindro1.setEscala(-0.15,-0.15,0.2);
-		this.cilindro1.setRotacion(Math.PI/2,0,0);
-		this.cilindro1.setPosicion(0,0,0.2);
+		this.cilindro1 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.2, 0.5, true), filas, columnas, false))
 		this.cilindro1.setColor(1,1,1)
 
 		this.dibujarHelices1()
@@ -92,10 +89,7 @@ class Helicoptero {
 		this.turbina2.setRotacion(Math.PI,0,0);
 		this.turbina2.setColor(1,0,0)
 
-		this.cilindro2 = new Objeto3D(crearGeometria(this.SUPERFICIE1, filas, columnas, false));
-		this.cilindro2.setEscala(-0.15,-0.15,0.2);
-		this.cilindro2.setRotacion(Math.PI/2,0,0);
-		this.cilindro2.setPosicion(0,0,0.1);
+		this.cilindro2 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.2, 0.5, true), filas, columnas, false))
 		this.cilindro2.setColor(1,1,1)
 
 		this.dibujarHelices2();
@@ -117,10 +111,7 @@ class Helicoptero {
 		this.turbina3.setEscala(8,25,2);
 		this.turbina3.setColor(1,0,0)
 
-		this.cilindro3 = new Objeto3D(crearGeometria(this.SUPERFICIE1, filas, columnas, false));
-		this.cilindro3.setEscala(-0.15,-0.15,0.2);
-		this.cilindro3.setRotacion(Math.PI/2,0,0);
-		this.cilindro3.setPosicion(0,0,0.1);
+		this.cilindro3 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.2, 0.5, true), filas, columnas, false))
 		this.cilindro3.setColor(1,1,1)
 
 		this.dibujarHelices3();
@@ -143,10 +134,7 @@ class Helicoptero {
 		this.turbina4.setEscala(8,25,2);
 		this.turbina4.setColor(1,0,0)
 
-		this.cilindro4 = new Objeto3D(crearGeometria(this.SUPERFICIE1, filas, columnas, false));
-		this.cilindro4.setEscala(-0.15,-0.15,0.2);
-		this.cilindro4.setRotacion(Math.PI/2,0,0);
-		this.cilindro4.setPosicion(0,0,0.1);
+		this.cilindro4 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.2, 0.5, true), filas, columnas, false))
 		this.cilindro4.setColor(1,1,1)
 
 		this.dibujarHelices4();
@@ -204,10 +192,10 @@ class Helicoptero {
 
 	dibujar = function(){
 
-		//this.cilindro1.setRotacion(0,time*100,0);
-		//this.cilindro2.setRotacion(0,time*100,0);
-		//this.cilindro3.setRotacion(0,time*100,0);
-		//this.cilindro4.setRotacion(0,time*100,0);
+		this.cilindro1.setRotacion(0,time*100,0);
+		this.cilindro2.setRotacion(0,time*100,0);
+		this.cilindro3.setRotacion(0,time*100,0);
+		this.cilindro4.setRotacion(0,time*100,0);
 
 		this.helicoptero.dibujar(mat4.create(),false);
 
@@ -388,29 +376,22 @@ class Helicoptero {
 	dibujarHelices1 = function(){
 
 		this.helice1_1 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice1_1.setPosicion(0,0,-0.2);
-		this.helice1_1.setEscala(8,8,8);
 		this.helice1_1.setRotacion(Math.PI/4,0,0)
 		this.helice1_1.setColor(0.3,0.3,0.3)
 		this.helice1_2 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice1_2.setEscala(8,8,8);
-		this.helice1_2.setRotacion(Math.PI/4,0,Math.PI/2)
+		this.helice1_2.setRotacion(Math.PI/4,Math.PI/6,0)
 		this.helice1_2.setColor(0.3,0.3,0.3)
 		this.helice1_3 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice1_3.setEscala(8,8,8);
-		this.helice1_3.setRotacion(Math.PI/4,0,Math.PI/2*3)
+		this.helice1_3.setRotacion(Math.PI/4,Math.PI/6*2,0)
 		this.helice1_3.setColor(0.3,0.3,0.3)
 		this.helice1_4 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice1_4.setEscala(8,8,8);
-		this.helice1_4.setRotacion(Math.PI/4,0,Math.PI/2*5)
+		this.helice1_4.setRotacion(Math.PI/4,Math.PI/6*3,0)
 		this.helice1_4.setColor(0.3,0.3,0.3)
 		this.helice1_5 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice1_5.setEscala(8,8,8);
-		this.helice1_5.setRotacion(Math.PI/4,0,Math.PI/2*7)
+		this.helice1_5.setRotacion(Math.PI/4,Math.PI/6*4,0)
 		this.helice1_5.setColor(0.3,0.3,0.3)
 		this.helice1_6 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice1_6.setEscala(8,8,8);
-		this.helice1_6.setRotacion(Math.PI/4,0,Math.PI/2*9)
+		this.helice1_6.setRotacion(Math.PI/4,Math.PI/6*5,0)
 		this.helice1_6.setColor(0.3,0.3,0.3)
 
 	}
@@ -419,27 +400,21 @@ class Helicoptero {
 
 		this.helice2_1 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
 		this.helice2_1.setRotacion(Math.PI/4,0,0)
-		this.helice2_1.setEscala(7,7,7);
 		this.helice2_1.setColor(0.3,0.3,0.3)
 		this.helice2_2 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice2_2.setRotacion(Math.PI/4,0,Math.PI/6)
-		this.helice2_2.setEscala(7,7,7);
+		this.helice2_2.setRotacion(Math.PI/4,Math.PI/6,0)
 		this.helice2_2.setColor(0.3,0.3,0.3)
 		this.helice2_3 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice2_3.setEscala(7,7,7);
-		this.helice2_3.setRotacion(Math.PI/4,0,Math.PI/6*2)
+		this.helice2_3.setRotacion(Math.PI/4,Math.PI/6*2,0)
 		this.helice2_3.setColor(0.3,0.3,0.3)
 		this.helice2_4 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice2_4.setEscala(7,7,7);
-		this.helice2_4.setRotacion(Math.PI/4,0,Math.PI/6*3)
+		this.helice2_4.setRotacion(Math.PI/4,Math.PI/6*3,0)
 		this.helice2_4.setColor(0.3,0.3,0.3)
 		this.helice2_5 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice2_5.setEscala(7,7,7);
-		this.helice2_5.setRotacion(Math.PI/4,0,Math.PI/6*4)
+		this.helice2_5.setRotacion(Math.PI/4,Math.PI/6*4,0)
 		this.helice2_5.setColor(0.3,0.3,0.3)
 		this.helice2_6 = new Objeto3D(crearGeometria(new Plano(1,0.2), filas, columnas, false))
-		this.helice2_6.setEscala(7,7,7);
-		this.helice2_6.setRotacion(Math.PI/4,0,Math.PI/6*5)
+		this.helice2_6.setRotacion(Math.PI/4,Math.PI/6*5,0)
 		this.helice2_6.setColor(0.3,0.3,0.3)
 
 	}
