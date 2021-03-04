@@ -52,7 +52,7 @@
             vec3 n = normalize(N);
             vec3 L = vec3(normalize(vec3(300.0,500.0,-300.0) - Position));
             vec3 V = normalize(vec3(-Position));
-            vec4 prueba = phong(n, L, V);
+            vec4 prueba = phong(-n, -L, -V);
 
             vec3 lightDirection= -normalize(uLightPosition - vec3(vWorldPosition));
             vec3 lightDirection2= -normalize(uLightPosition2 - vec3(vWorldPosition));
