@@ -29,7 +29,7 @@
         varying vec4 vTextureCoord;
         uniform float uUseReflection;
         varying float vUseReflection;
-        varying vec3 vectorObjetoHastaCamara;                             
+        varying vec3 pos_camera_view;                             
         
         // constantes
         
@@ -59,9 +59,9 @@
             // ************************************************************************
 
             vec4 worldPos = uMMatrix*vec4(position, 1.0);                        
-            vec4 posMult = uVMatrix*worldPos; 
+            vec4 posMult = uVMatrix*worldPos;
 
-            vectorObjetoHastaCamara = normalize(-vec3(posMult) / posMult.w);
+            pos_camera_view = normalize(vec3(posMult) / posMult.w);
 
             gl_Position = uPMatrix*uVMatrix*worldPos;
 

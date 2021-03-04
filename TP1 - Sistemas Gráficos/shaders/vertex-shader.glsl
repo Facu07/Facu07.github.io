@@ -25,6 +25,7 @@
 
         varying vec3 vWorldPosition;
         varying vec3 vNormal;
+        varying vec3 pos_camera_view;
         varying vec2 vUv;               
         
         // constantes
@@ -43,6 +44,10 @@
             vec4 textureColor = texture2D(uSampler, vec2(uv.s, uv.t));
 
             vec4 worldPos = uMMatrix*vec4(position,1.0);
+
+            vec4 posMult = uVMatrix*worldPos;
+
+            pos_camera_view = normalize(vec3(posMult) / posMult.w);
 
             gl_Position = uPMatrix*uVMatrix*worldPos;
 

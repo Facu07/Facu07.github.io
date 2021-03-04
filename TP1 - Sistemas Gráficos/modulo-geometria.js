@@ -46,8 +46,8 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
     }
 
     this.getCoordenadasTextura=function(u,v){
-        u = niveles - niveles*(filas / (3*columnas - 2 - 1));
-        v = vertices - vertices*(columnas / (filas - 1));
+        //u = niveles - niveles*(filas / (3*columnas - 2 - 1));
+        //v = vertices - vertices*(columnas / (filas - 1));
         return [u,v];
     }
 }
@@ -279,7 +279,7 @@ function dibujarMalla(mallaDeTriangulos, textura, reflectiveTexture){
         gl.uniform1i(shaderProgram.useReflectionUniform, true);
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, reflectiveTexture);
-        gl.uniform1i(shaderProgram.samplerUniform, 1);
+        gl.uniform1i(shaderProgram.samplerUniformReflection, 1);
     }else{
         gl.uniform1i(shaderProgram.useReflectionUniform, false);
     }

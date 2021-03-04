@@ -16,10 +16,10 @@
         uniform vec3 uAmbientColor;         // color de luz ambiente
         uniform vec3 uDirectionalColor;	    // color de luz direccional
         uniform vec3 uLightPosition;        // posición de la luz
+        uniform vec3 uLightPosition2;        // posición de la luz   
         
 
         uniform vec3 uDirectionalColor2;	    // color de luz direccional
-        uniform vec3 uLightPosition2;        // posición de la luz   
 
         uniform bool uUseLighting;          // usar iluminacion si/no
         uniform bool uUseColor;
@@ -30,11 +30,14 @@
         uniform sampler2D uSampler2;
         uniform sampler2D uSamplerReflectionMap;
 
+        // Sol: Direccional
+        uniform vec3 uPrincipalLightDirection;
+
         varying highp vec2 vUv;
         
         uniform float scale1;
         uniform float low;
-        uniform float high;     
+        uniform float high;
 
         
         // Perlin Noise                     
@@ -212,11 +215,10 @@
           
           //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
           color+=uAmbientColor;
-          color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
-          color+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection2), 0.0),32.0);
+          color+=uDirectionalColor*max(dot(vNormal,-lightDirection), 0.0);
+          color+=uDirectionalColor2*pow(max(dot(vNormal,-lightDirection2), 0.0),32.0);
 
           // color difuso
-          vec3 lightVec=normalize(vec3(1.0,1.0,1.0));
           float factorDifuso=max(0.8,dot(vNormal,uDirectionalColor)*1.1);
 
           gl_FragColor = vec4(color*factorDifuso,1.0); 

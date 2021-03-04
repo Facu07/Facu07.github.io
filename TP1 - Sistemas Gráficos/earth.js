@@ -145,17 +145,19 @@ class Earth {
         gl.bindTexture(gl.TEXTURE_2D, textures[0]);
         gl.uniform1i(this.shaderProgram.samplerUniform, 0);
 
-        gl.activeTexture(gl.TEXTURE1);
-        gl.bindTexture(gl.TEXTURE_2D, textures[1]);
-        gl.uniform1i(this.shaderProgram.samplerUniform0, 1);
+        if(textures[1] != null){
+            gl.activeTexture(gl.TEXTURE1);
+            gl.bindTexture(gl.TEXTURE_2D, textures[1]);
+            gl.uniform1i(this.shaderProgram.samplerUniform0, 1);
 
-        gl.activeTexture(gl.TEXTURE2);
-        gl.bindTexture(gl.TEXTURE_2D, textures[2]);
-        gl.uniform1i(this.shaderProgram.samplerUniform1, 2);
+            gl.activeTexture(gl.TEXTURE2);
+            gl.bindTexture(gl.TEXTURE_2D, textures[2]);
+            gl.uniform1i(this.shaderProgram.samplerUniform1, 2);
 
-        gl.activeTexture(gl.TEXTURE3);
-        gl.bindTexture(gl.TEXTURE_2D, textures[3]);
-        gl.uniform1i(this.shaderProgram.samplerUniform2, 3);
+            gl.activeTexture(gl.TEXTURE3);
+            gl.bindTexture(gl.TEXTURE_2D, textures[3]);
+            gl.uniform1i(this.shaderProgram.samplerUniform2, 3);
+        }
 
         if (useReflection) {
             gl.uniform1f(shaderProgram.useReflectionUniform, 1.0);
