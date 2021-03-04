@@ -473,13 +473,13 @@
                     break;
                 case 2:
                     mat4.rotate(matrizVista,matrizVista,Math.PI/2-rot[1],rotacionY)
-                    vec3.set(eye_point, -pos[0] - aumento,-pos[1] + aumento/1.5,-pos[2])
+                    vec3.set(eye_point, -pos[0] - aumento*1.5,-pos[1] + aumento,-pos[2])
                     vec3.set(at_point, 0, 0, 0);
                     mat4.translate(matrizVista,matrizVista,eye_point)
                     break;
                 case 3:
                     mat4.rotate(matrizVista,matrizVista,-rot[1],rotacionY)
-                    vec3.set(eye_point, -pos[0],-pos[1] + aumento/1.5,-pos[2] + aumento)
+                    vec3.set(eye_point, -pos[0],-pos[1] + aumento,-pos[2] + aumento*1.5)
                     mat4.translate(matrizVista,matrizVista,eye_point)
                     break;
                 case 4:
