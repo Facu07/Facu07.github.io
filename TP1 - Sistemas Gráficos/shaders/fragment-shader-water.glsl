@@ -27,8 +27,8 @@
 
             // uSampler: agua
 
-            vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
-            vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
+            vec3 lightDirection= -normalize(uLightPosition - vec3(vWorldPosition));
+            vec3 lightDirection2= -normalize(uLightPosition2 - vec3(vWorldPosition));
 
             vec3 color = texture2D(uSampler, vec2(vUv.s, vUv.t)).xyz;
 
@@ -43,6 +43,8 @@
             
             vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta)).xyz;
 
-            gl_FragColor = vec4(color+colorRefleccion,1.0);
+            float factorDifuso=max(0.8,dot(vNormal,uDirectionalColor)*1.1);
+
+            gl_FragColor = vec4((color+colorRefleccion)*factorDifuso,1.0);
             
         }

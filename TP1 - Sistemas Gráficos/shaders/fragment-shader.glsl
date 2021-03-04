@@ -20,26 +20,31 @@
 
         void main(void) {
 
-            vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
-            vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
+            vec3 lightDirection= -normalize(uLightPosition - vec3(vWorldPosition));
+            vec3 lightDirection2= -normalize(uLightPosition2 - vec3(vWorldPosition));
 
             vec3 textureColor = texture2D(uSampler, vec2(vUv.s, vUv.t)).xyz;
 
             textureColor+=uAmbientColor;
             textureColor+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
-            textureColor+=uDirectionalColor2*max(dot(vNormal,lightDirection2), 0.0);
+            textureColor+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection2), 0.0),32.0);
+
+            float factorDifuso=max(0.8,dot(vNormal,uDirectionalColor)*1.1);
             
-            vec3 color=(uAmbientColor+uDirectionalColor*max(dot(vNormal,lightDirection), 0.0));
-           
+            //vec3 color=(uAmbientColor+uDirectionalColor*max(dot(vNormal,lightDirection), 0.0));
+            vec3 color = vec3(0,0,0);
             color.x=RGB.x;
             color.y=RGB.y;
             color.z=RGB.z;
 
-            // Utilizo color o textura
-            if (RGB.x > 1.1)
-                gl_FragColor = vec4(textureColor,1.0);
-            else
-                gl_FragColor = vec4(color,1.0);
+            color+=uAmbientColor;
+            color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
+            color+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection2), 0.0),32.0);
 
+            // Utilizo color o textura
+            if (uUseColor)//RGB.x > 1.1)
+                gl_FragColor = vec4(color,1.0);
+            else
+                gl_FragColor = vec4(textureColor,1.0);
             
         }

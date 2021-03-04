@@ -1,6 +1,6 @@
 class PlataformaHeli{
 	
-	constructor(shaderProgram){
+	constructor(){
 
 		this.plataformaHeli = new Objeto3D(crearGeometria(new Plano(1,1), filas, columnas, true));
 		this.plataformaHeli.setPosicion(1,1.7,1)

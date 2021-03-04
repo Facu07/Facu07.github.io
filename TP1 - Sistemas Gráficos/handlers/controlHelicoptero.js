@@ -18,8 +18,8 @@ function ControlHelicoptero(){
     var deltaAngle=0.03;
 
 
-    var maxSpeed=0.1;
-    var minSpeed=-0.1;
+    var maxSpeed=0.009;
+    var minSpeed=-0.009;
     var maxAltitude=300;
     var minAltitude=1.81;
 

@@ -217,7 +217,7 @@
 
           // color difuso
           vec3 lightVec=normalize(vec3(1.0,1.0,1.0));
-          float factorDifuso=max(0.8,dot(vNormal,lightVec)*1.1);
+          float factorDifuso=max(0.8,dot(vNormal,uDirectionalColor)*1.1);
 
           gl_FragColor = vec4(color*factorDifuso,1.0); 
 
