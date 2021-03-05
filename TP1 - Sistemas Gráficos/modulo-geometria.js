@@ -48,6 +48,13 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
     this.getCoordenadasTextura=function(u,v,i,j){
         u = 4 - 4*(j / (3*columnas - 2 - 1));
         v = 1 - 1*(i / (filas - 1));
+        if ((conTapa && v==0) || (conTapa && v == 1)) {  
+            if(v==0){
+                return [u,0];
+            }else{
+                return[u,1];
+            }
+        }
         return [u,v];
     }
 }
