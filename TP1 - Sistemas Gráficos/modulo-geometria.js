@@ -45,9 +45,9 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
         return [1,0,1];
     }
 
-    this.getCoordenadasTextura=function(u,v){
-        //u = niveles - niveles*(filas / (3*columnas - 2 - 1));
-        //v = vertices - vertices*(columnas / (filas - 1));
+    this.getCoordenadasTextura=function(u,v,i,j){
+        u = 4 - 4*(j / (3*columnas - 2 - 1));
+        v = 1 - 1*(i / (filas - 1));
         return [u,v];
     }
 }
@@ -192,7 +192,7 @@ function generarSuperficie(superficie,filas,columnas){
             normalBuffer.push(nrm[1]);
             normalBuffer.push(nrm[2]);
 
-            var uvs=superficie.getCoordenadasTextura(u,v);
+            var uvs=superficie.getCoordenadasTextura(u,v,i,j);
             uvBuffer.push(uvs[0]);
             uvBuffer.push(uvs[1]);
 
