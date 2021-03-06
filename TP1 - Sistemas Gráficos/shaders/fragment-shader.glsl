@@ -32,7 +32,7 @@
 
         void main(void) {
 
-            vec3 lightDirection= normalize(vec3(-500.0, 500.0, -500.0));
+            vec3 lightDirection= normalize(uLightPosition);
             vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
 
             vec3 textureColor = texture2D(uSampler, vec2(vUv.s, vUv.t)).xyz;            
@@ -40,8 +40,8 @@
             vec3 lightVec = vec3(-1.0,1.0,-1.0);
 
             textureColor+=uAmbientColor;
-            textureColor+=textureColor*0.3*max(dot(N,lightVec), 0.0);
-            textureColor+=uDirectionalColor2*pow(max(dot(N,lightVec), 0.0),64.0);
+            textureColor+=textureColor*0.3*max(dot(N,lightDirection), 0.0);
+            textureColor+=uDirectionalColor2*pow(max(dot(N,lightDirection), 0.0),64.0);
 
 
             gl_FragColor = vec4(textureColor,1.0);
