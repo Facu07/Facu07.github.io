@@ -16,9 +16,9 @@ function crearGeometria(SUPERFICIE, filas, columnas, esTexturada){
     return generarSuperficie(superficie3D,filas,columnas);;
 }
 
-function dibujarGeometria(mallaDeTriangulos, textura, isTextured){
+function dibujarGeometria(mallaDeTriangulos, textura, reflectiveTexture, shaderProgramSimple){
 
-    dibujarMalla(mallaDeTriangulos, textura, isTextured);
+    dibujarMalla(mallaDeTriangulos, textura, reflectiveTexture, shaderProgramSimple);
 
 }
 
@@ -41,8 +41,37 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
         return nuevoVertice;
     }
 
-    this.getNormal=function(u,v){
-        return [1,0,1];
+    this.restaVec=function(vecA, vecB) {
+        return [vecA[0] - vecB[0], vecA[1] - vecB[1], vecA[2] - vecB[2]];
+    }
+
+    this.prodVectorial = function(vecA, vecB) {
+        var x = vecA[1] * vecB[2] - vecA[2] * vecB[1];
+        var y = vecA[2] * vecB[0] - vecA[0] * vecB[2];
+        var z = vecA[0] * vecB[1] - vecA[1] * vecB[0];
+        return [x,y,z];
+    }
+
+    this.getNormal=function(u,v) {
+
+        if ((conTapa && v==0) || (conTapa && v == 1)) {  
+            if(v==0){
+                return [1,0,0];         
+            }else{
+                return [0,0,1];
+            }
+        }
+
+        var orig = this.getPosicion(u,v);
+        var delta1 = this.getPosicion(u+.01,v);
+        var delta2 = this.getPosicion(u,v+.01);
+
+        var sup1 = this.restaVec(delta1, orig);
+        var sup2 = this.restaVec(delta2, orig);
+
+        var normal = this.prodVectorial(sup1, sup2);
+
+        return [0,1,0];
     }
 
     this.getCoordenadasTextura=function(u,v,i,j){
@@ -265,46 +294,46 @@ function generarSuperficie(superficie,filas,columnas){
     }
 }
 
-function dibujarMalla(mallaDeTriangulos, textura, reflectiveTexture){
+function dibujarMalla(mallaDeTriangulos, textura, reflectiveTexture, shaderProgramSimple){
     
     // Se configuran los buffers que alimentaron el pipeline
     gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_position_buffer);
-    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, mallaDeTriangulos.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(shaderProgramHeli.vertexPositionAttribute, mallaDeTriangulos.webgl_position_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
     if(textura != null){
-        gl.uniform1i(shaderProgram.useColorUniform, false);
+        gl.uniform1i(shaderProgramHeli.useColorUniform, false);
         gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_uvs_buffer);
-        gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, mallaDeTriangulos.webgl_uvs_buffer.itemSize, gl.FLOAT, false, 0, 0);
+        gl.vertexAttribPointer(shaderProgramHeli.textureCoordAttribute, mallaDeTriangulos.webgl_uvs_buffer.itemSize, gl.FLOAT, false, 0, 0);
         gl.activeTexture(gl.TEXTURE0);
         gl.bindTexture(gl.TEXTURE_2D, textura);
-        gl.uniform1i(shaderProgram.samplerUniform, 0);
+        gl.uniform1i(shaderProgramHeli.samplerUniform, 0);
     }else{
-        gl.uniform1i(shaderProgram.useColorUniform, true);
+        gl.uniform1i(shaderProgramHeli.useColorUniform, true);
     }
 
     if(reflectiveTexture != null){
-        gl.uniform1i(shaderProgram.usePhongLighting, true);
-        gl.uniform1i(shaderProgram.useReflectionUniform, true);
+        gl.uniform1i(shaderProgramHeli.usePhongLighting, true);
+        gl.uniform1i(shaderProgramHeli.useReflectionUniform, true);
         gl.activeTexture(gl.TEXTURE1);
         gl.bindTexture(gl.TEXTURE_2D, reflectiveTexture);
-        gl.uniform1i(shaderProgram.samplerUniformReflection, 1);
+        gl.uniform1i(shaderProgramHeli.samplerUniformReflection, 1);
     }else{
-        gl.uniform1i(shaderProgram.useReflectionUniform, false);
-        gl.uniform1i(shaderProgram.usePhongLighting, false);
+        gl.uniform1i(shaderProgramHeli.useReflectionUniform, false);
+        gl.uniform1i(shaderProgramHeli.usePhongLighting, false);
     }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, mallaDeTriangulos.webgl_normal_buffer);
-    gl.vertexAttribPointer(shaderProgram.vertexNormalAttribute, mallaDeTriangulos.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);
+    gl.vertexAttribPointer(shaderProgramHeli.vertexNormalAttribute, mallaDeTriangulos.webgl_normal_buffer.itemSize, gl.FLOAT, false, 0, 0);
 
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, mallaDeTriangulos.webgl_index_buffer);
 
     if (modo!="wireframe"){
-        gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
+        gl.uniform1i(shaderProgramHeli.useLightingUniform,(lighting=="true"));
         gl.drawElements(gl.TRIANGLE_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
     }
     
     if (modo!="smooth") {
-        gl.uniform1i(shaderProgram.useLightingUniform,false);
+        gl.uniform1i(shaderProgramHeli.useLightingUniform,false);
         gl.drawElements(gl.LINE_STRIP, mallaDeTriangulos.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
     }
  

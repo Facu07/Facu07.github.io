@@ -21,6 +21,7 @@ class Earth {
         
         this.texture = null;
         this.shaderProgram = shaderProgram;
+
 	}
 
     actualizarMatrices = function() {
@@ -66,7 +67,7 @@ class Earth {
                 var y = y;
 
                 var u = ((z+(lado_parcela*fila_parcelas)/2 )/ (lado_parcela*fila_parcelas));
-                var v = 1 - ((x+(lado_parcela*fila_parcelas)/2 )/ (lado_parcela*fila_parcelas)); 
+                var v = 1 - ((x+(lado_parcela*fila_parcelas)/2 )/ (lado_parcela*fila_parcelas));
 
                 this.normal_buffer.push(0);
                 this.normal_buffer.push(1);

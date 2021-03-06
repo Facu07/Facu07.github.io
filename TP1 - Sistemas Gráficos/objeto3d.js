@@ -1,6 +1,6 @@
 class Objeto3D{
 	
-	constructor(malla){
+	constructor(malla, shaderProgram){
 
 		var vertexBuffer=null;
 		var indexBuffer=null;
@@ -15,6 +15,7 @@ class Objeto3D{
 		this.rgb = [2,2,2];
 		this.texture = null;
 		this.reflectionTexture = null;
+		this.shaderProgram = shaderProgram;
 	}
 
 	actualizarMatrices(matPadre, temp){
@@ -37,10 +38,10 @@ class Objeto3D{
         mat3.invert(this.matrizNormal, this.matrizNormal);
         mat3.transpose(this.matrizNormal, this.matrizNormal);
 
-		gl.uniform3fv(shaderProgram.color, this.rgb);
+		gl.uniform3fv(shaderProgramHeli.color, this.rgb);
 
-		gl.uniformMatrix4fv(shaderProgram.mMatrixUniform, false, temp);
-		gl.uniformMatrix3fv(shaderProgram.nMatrixUniform, false, this.matrizNormal);
+		gl.uniformMatrix4fv(shaderProgramHeli.mMatrixUniform, false, temp);
+		gl.uniformMatrix3fv(shaderProgramHeli.nMatrixUniform, false, this.matrizNormal);
 
 
 		
@@ -51,9 +52,14 @@ class Objeto3D{
 		return this.malla;
 	}
 
+	getTexture = function(){
+
+		return this.texture;
+	}
+
 	initTexture = function(texture_file){
             
-        gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
+        gl.uniform1i(shaderProgramHeli.useLightingUniform,(lighting=="true"));
         var texture = gl.createTexture();
         texture.image = new Image();
 
@@ -93,7 +99,7 @@ class Objeto3D{
 
 		var temp = mat4.create();
 		this.actualizarMatrices(matPadre, temp);
-		dibujarGeometria(this.malla, this.texture, this.reflectionTexture);
+		dibujarGeometria(this.malla, this.texture, this.reflectionTexture, shaderProgramHeli);
 		for(var i = 0; i < this.hijos.length; i++){
 			this.hijos[i].dibujar(temp);
 		}
@@ -145,6 +151,24 @@ class Objeto3D{
 	getMatrizModelado = function(){
 
 		return this.matrizModelado;
+		
+	}
+
+	setMatrizModelado = function(mat){
+
+		this.matrizModelado = mat;
+		
+	}
+
+	getMatrizNormal = function(){
+
+		return this.matrizNormal;
+		
+	}
+
+	setMatrizNormal = function(mat){
+
+		this.matrizNormal = mat;
 		
 	}
 

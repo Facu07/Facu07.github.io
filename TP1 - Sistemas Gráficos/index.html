@@ -51,10 +51,12 @@
         var vertexShaderFile="vertex-shader.glsl";
         var vertexShaderFileEarth="vertex-shader-earth.glsl";
         var vertexShaderFileWater="vertex-shader-water.glsl";
+        var vertexShaderFileHeli="vertex-shader.glsl";
         var modo="smooth"; // wireframe, smooth, edges
         var shaderProgram;
         var shaderProgramEarth;
         var shaderProgramWater;
+        var shaderProgramHeli;
         var time=0;
 
         var gl;
@@ -86,6 +88,9 @@
 
         var vertexShaderWaterSource;
         var fragmentShaderWaterSource;
+
+        var vertexShaderHeliSource;
+        var fragmentShaderHeliSource;
 
         var scale1=3;
         var low=0.1;
@@ -138,7 +143,7 @@
 
         function loadShaders(){
 
-            $.when(loadVS(),loadVSEarth(), loadVSWater(), loadFS(), loadFSEarth(), loadFSWater()).done(function(res1,res2){
+            $.when(loadVS(), loadVSEarth(), loadVSWater(), loadVSHeli(), loadFS(), loadFSEarth(), loadFSWater(), loadFSHeli()).done(function(res1,res2){
                 //this code is executed when all ajax calls are done     
                 webGLStart();
             });
@@ -170,6 +175,15 @@
                 });
             }
 
+            function loadVSHeli() {
+                return  $.ajax({
+                    url: "shaders/vertex-shader-heli.glsl",
+                    success: function(result){
+                        vertexShaderHeliSource=result;
+                    }
+                });
+            }
+
             function loadFS() {
                 return  $.ajax({
                     url: "shaders/fragment-shader.glsl",
@@ -193,6 +207,15 @@
                     url: "shaders/fragment-shader-water.glsl",
                     success: function(result){
                         fragmentShaderWaterSource=result;
+                    }
+                });
+            }
+
+            function loadFSHeli() {
+                return  $.ajax({
+                    url: "shaders/fragment-shader-heli.glsl",
+                    success: function(result){
+                        fragmentShaderHeliSource=result;
                     }
                 });
             }
@@ -242,9 +265,13 @@
             var vertexShaderWater= getShader(gl, vertexShaderWaterSource,"vertex");
             var fragmentShaderWater= getShader(gl, fragmentShaderWaterSource,"fragment");
 
+            var vertexShaderHeli= getShader(gl, vertexShaderHeliSource,"vertex");
+            var fragmentShaderHeli= getShader(gl, fragmentShaderHeliSource,"fragment");
+
             shaderProgram = gl.createProgram();
             shaderProgramEarth = gl.createProgram();
             shaderProgramWater = gl.createProgram();
+            shaderProgramHeli = gl.createProgram();
 
             gl.attachShader(shaderProgram, vertexShader);
             gl.attachShader(shaderProgram, fragmentShader);
@@ -258,6 +285,10 @@
             gl.attachShader(shaderProgramWater, fragmentShaderWater);
             gl.linkProgram(shaderProgramWater);
 
+            gl.attachShader(shaderProgramHeli, vertexShaderHeli);
+            gl.attachShader(shaderProgramHeli, fragmentShaderHeli);
+            gl.linkProgram(shaderProgramHeli);
+
 
             if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS)) {
                 alert("Could not initialise simple shaders");
@@ -269,6 +300,10 @@
 
             if (!gl.getProgramParameter(shaderProgramWater, gl.LINK_STATUS)) {
                 alert("Could not initialise water shaders");
+            }
+
+            if (!gl.getProgramParameter(shaderProgramHeli, gl.LINK_STATUS)) {
+                alert("Could not initialise heli shaders");
             }
     
             shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aPosition");
@@ -296,6 +331,15 @@
             shaderProgramWater.vertexNormalAttribute = gl.getAttribLocation(shaderProgramWater, "aNormal");
             gl.enableVertexAttribArray(shaderProgramWater.vertexNormalAttribute);
             shaderProgramWater.useReflectionUniform = gl.getUniformLocation(shaderProgramWater, "uUseReflection");
+
+            shaderProgramHeli.vertexPositionAttribute = gl.getAttribLocation(shaderProgramHeli, "aPosition");
+            gl.enableVertexAttribArray(shaderProgramHeli.vertexPositionAttribute);
+            shaderProgramHeli.color = gl.getUniformLocation(shaderProgramHeli, "RGB");
+            shaderProgramHeli.textureCoordAttribute = gl.getAttribLocation(shaderProgramHeli, "aUv");
+            gl.enableVertexAttribArray(shaderProgramHeli.textureCoordAttribute);
+            shaderProgramHeli.vertexNormalAttribute = gl.getAttribLocation(shaderProgramHeli, "aNormal");
+            gl.enableVertexAttribArray(shaderProgramHeli.vertexNormalAttribute);
+            shaderProgramHeli.useReflectionUniform = gl.getUniformLocation(shaderProgramHeli, "uUseReflection");
 
 
             shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
@@ -348,6 +392,22 @@
             shaderProgramWater.directionalColorUniform = gl.getUniformLocation(shaderProgramWater, "uDirectionalColor");
             shaderProgramWater.lightingDirectionUniform2 = gl.getUniformLocation(shaderProgramWater, "uLightPosition2");
             shaderProgramWater.directionalColorUniform2 = gl.getUniformLocation(shaderProgramWater, "uDirectionalColor2");
+
+            shaderProgramHeli.pMatrixUniform = gl.getUniformLocation(shaderProgramHeli, "uPMatrix");
+            shaderProgramHeli.mMatrixUniform = gl.getUniformLocation(shaderProgramHeli, "uMMatrix");
+            shaderProgramHeli.vMatrixUniform = gl.getUniformLocation(shaderProgramHeli, "uVMatrix");
+            shaderProgramHeli.nMatrixUniform = gl.getUniformLocation(shaderProgramHeli, "uNMatrix");
+            shaderProgramHeli.samplerUniform = gl.getUniformLocation(shaderProgramHeli, "uSampler");
+            shaderProgramHeli.samplerUniformReflection = gl.getUniformLocation(shaderProgramHeli, "uSamplerReflectionMap");
+            shaderProgramHeli.useLightingUniform = gl.getUniformLocation(shaderProgramHeli, "uUseLighting");
+            shaderProgramHeli.ambientColorUniform = gl.getUniformLocation(shaderProgramHeli, "uAmbientColor");
+            shaderProgramHeli.useColorUniform = gl.getUniformLocation(shaderProgramHeli, "uUseColor");
+            shaderProgramHeli.usePhongLighting = gl.getUniformLocation(shaderProgramHeli, "uUsePhong");
+            shaderProgramHeli.frameUniform = gl.getUniformLocation(shaderProgramHeli, "time");
+            shaderProgramHeli.lightingDirectionUniform = gl.getUniformLocation(shaderProgramHeli, "uLightPosition");
+            shaderProgramHeli.directionalColorUniform = gl.getUniformLocation(shaderProgramHeli, "uDirectionalColor");
+            shaderProgramHeli.lightingDirectionUniform2 = gl.getUniformLocation(shaderProgramHeli, "uLightPosition2");
+            shaderProgramHeli.directionalColorUniform2 = gl.getUniformLocation(shaderProgramHeli, "uDirectionalColor2");
         }
 
         function setMatrixUniforms() {
@@ -370,6 +430,13 @@
             gl.uniformMatrix4fv(shaderProgramWater.pMatrixUniform, false, matrizProyeccion);
     
         }
+
+        function setMatrixUniformsHeli() {
+            
+            gl.uniformMatrix4fv(shaderProgramHeli.vMatrixUniform, false, matrizVista);
+            gl.uniformMatrix4fv(shaderProgramHeli.pMatrixUniform, false, matrizProyeccion);
+    
+        }
               
         function drawScene() {
         
@@ -389,46 +456,48 @@
             // Se inicializan las variables asociadas con la Iluminación           
             // Configuración de la luz
             // Sol
-            var sunPosition = vec3.fromValues(500.0, 300.0, -500.0);
+            var sunPosition = vec3.fromValues(-500.0, 500.0, 500.0);
 
             gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
-            gl.uniform3f(shaderProgram.ambientColorUniform, 0.6, 0.6, 0.6 );
             gl.uniform3f(shaderProgram.directionalColorUniform, 1.2, 1.1, 0.7);
             gl.uniform1i(shaderProgram.useLightingUniform,(lighting=="true"));
 
             gl.uniform3fv(shaderProgram.lightingDirectionUniform, sunPosition);
             gl.uniform3fv(shaderProgram.lightingDirectionUniform2, sunPosition);
-            gl.uniform1f(shaderProgram.lightPrincipalIntensity, 1.2);                         //Intensidad
-            gl.uniform3f(shaderProgram.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
-            gl.uniform3f(shaderProgram.directionalColorUniform2, 1.0, 1.0, 1.0);              //Difusa
-            gl.uniform3f(shaderProgram.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular
+            gl.uniform3f(shaderProgram.ambientColorUniform, 0.8, 0.8, 0.8);                   //Ambiente
+            gl.uniform3f(shaderProgram.directionalColorUniform2, 1.2, 1.1, 0.7);              //Difusa
 
             gl.uniform1f(shaderProgramEarth.frameUniform, time/10.0 );
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "scale1"), scale1);
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "low"), low);
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "high"), high);
-            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.6,0.6,0.6);//0.30, 0.23, 0.19);
             gl.uniform3f(shaderProgramEarth.directionalColorUniform, 1.2, 1.1, 0.7);
             gl.uniform1i(shaderProgramEarth.useLightingUniform,(lighting=="true"));
 
             gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform, sunPosition);
             gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform2, sunPosition);
-            gl.uniform1f(shaderProgramEarth.lightPrincipalIntensity, 1.2);                         //Intensidad
-            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
-            gl.uniform3f(shaderProgramEarth.directionalColorUniform2, 1.0, 1.0, 1.0);              //Difusa
-            gl.uniform3f(shaderProgramEarth.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular
+            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.6, 0.6, 0.6);                   //Ambiente
+            gl.uniform3f(shaderProgramEarth.directionalColorUniform2,  1.0, 1.0, 1.0);              //Difusa
 
             gl.uniform1f(shaderProgramWater.frameUniform, time/10.0 );
             gl.uniform3f(shaderProgramWater.ambientColorUniform, 0.6, 0.6, 0.6 );
-            gl.uniform3f(shaderProgramWater.directionalColorUniform, 1.2, 1.1, 0.7);
+            gl.uniform3f(shaderProgramWater.directionalColorUniform, 0.8, 0.7, 0.3);
             gl.uniform1i(shaderProgramWater.useLightingUniform,(lighting=="true"));
 
             gl.uniform3fv(shaderProgramWater.lightingDirectionUniform, sunPosition);
             gl.uniform3fv(shaderProgramWater.lightingDirectionUniform2, sunPosition);
-            gl.uniform1f(shaderProgramWater.lightPrincipalIntensity, 1.2);                         //Intensidad
             gl.uniform3f(shaderProgramWater.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
             gl.uniform3f(shaderProgramWater.directionalColorUniform2, 1.0, 1.0, 1.0);              //Difusa
-            gl.uniform3f(shaderProgramWater.specularPrincipalColorUniform, 0.4, 0.4, 0.4);         //Especular*/
+
+            gl.uniform1f(shaderProgramHeli.frameUniform, time/10.0 );
+            gl.uniform3f(shaderProgramHeli.directionalColorUniform, 1.2, 1.1, 0.7);
+            gl.uniform1i(shaderProgramHeli.useLightingUniform,(lighting=="true"));
+
+            gl.uniform3fv(shaderProgramHeli.lightingDirectionUniform, sunPosition);
+            gl.uniform3fv(shaderProgramHeli.lightingDirectionUniform2, sunPosition);
+            gl.uniform3f(shaderProgramHeli.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
+            gl.uniform3f(shaderProgramHeli.directionalColorUniform2, 1.0, 1.0, 1.0);              //Difusa
+
             // Definimos la ubicación de la camara
 
             $("body").keydown(function(e){
@@ -496,10 +565,13 @@
 
             gl.useProgram(shaderProgram);
             setMatrixUniforms();
-            contenedorHelicoptero.dibujar();
-
-            plataformaHeli.dibujar();
+            //contenedorHelicoptero.dibujar();
+            plataformaHeli.dibujar(mat4.create());
             sky.dibujar();
+
+            gl.useProgram(shaderProgramHeli);
+            setMatrixUniformsHeli();
+            contenedorHelicoptero.dibujar();
 
             gl.useProgram(shaderProgramWater);
             setMatrixUniformsWater();
@@ -553,14 +625,14 @@
             initGL(canvas);
             initShaders();
 
-            plataformaHeli = new PlataformaHeli();
-
-            controlHelicopterio=new ControlHelicoptero();
-            contenedorHelicoptero = new Helicoptero();
-
+            plataformaHeli = new PlataformaHeli(shaderProgram);
             sky = new TexturedSphere(segmentos, segmentos, shaderProgram);
             sky.initBuffers();
             sky.initTexture("img/cielo1.jpg");
+
+            controlHelicopterio=new ControlHelicoptero();
+            contenedorHelicoptero = new Helicoptero(shaderProgram);
+
 
             agua = new TextureManager(12);
             agua.initParcelas(segmentos, segmentos, shaderProgramWater, 1.0);

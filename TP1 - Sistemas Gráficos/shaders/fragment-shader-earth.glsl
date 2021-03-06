@@ -34,10 +34,14 @@
         uniform vec3 uPrincipalLightDirection;
 
         varying highp vec2 vUv;
+        varying vec3 v;
         
         uniform float scale1;
         uniform float low;
         uniform float high;
+
+        // constantes        
+        const float PI=3.141592653;
 
         
         // Perlin Noise                     
@@ -146,8 +150,8 @@
           // uSampler0: tierra
           // uSampler1: roca
           // uSampler2: pasto
-          vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
-          vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
+          vec3 lightDirection= normalize(uLightPosition); //cambiar nombre
+          vec3 lightDirection2= normalize(uLightPosition2);
 
           // vector +Z
           vec3 up=vec3(0.0,0.0,1.0);
@@ -214,14 +218,16 @@
           //color+=mix(color3,colorNieve,mask2);
           
           //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
+          vec3 lightVec = vec3(-1.0,0.0,1.0);
           color+=uAmbientColor;
-          color+=uDirectionalColor*max(dot(vNormal,-lightDirection), 0.0);
-          color+=uDirectionalColor2*pow(max(dot(vNormal,-lightDirection2), 0.0),32.0);
+          color+=0.1*uDirectionalColor*max(dot(vNormal,lightVec), 0.0);
+          color+=uDirectionalColor2*pow(max(dot(vNormal,lightVec), 0.0),32.0);
 
           // color difuso
-          float factorDifuso=max(0.8,dot(vNormal,uDirectionalColor)*1.1);
+          float factorDifuso=(max(0.5,dot(vNormal,lightVec)*1.1));
 
-          gl_FragColor = vec4(color*factorDifuso,1.0); 
+          gl_FragColor = vec4(color*factorDifuso,1.0);
 
+          //gl_FragColor = vec4(vNormal,1.0);
             
         }

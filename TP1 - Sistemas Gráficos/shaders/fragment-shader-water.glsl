@@ -27,26 +27,29 @@
 
             // uSampler: agua
 
-            vec3 lightDirection= -normalize(uLightPosition - vec3(vWorldPosition));
-            vec3 lightDirection2= -normalize(uLightPosition2 - vec3(vWorldPosition));
-
+            vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
+            vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
             vec3 color = texture2D(uSampler, vec2(vUv.s, vUv.t)).xyz;
 
+            //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
             color+=uAmbientColor;
-            color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
-            color+=uDirectionalColor2*max(dot(vNormal,lightDirection2), 0.0);
+            color+=uDirectionalColor*max(dot(-vNormal,lightDirection), 0.0);
+            color+=uDirectionalColor2*pow(max(dot(lightDirection,-vNormal), 0.0),5.0);
 
-            vec3 vectorReflectado = reflect(pos_camera_view, vNormal);
+            vec3 vectorReflectado = reflect(pos_camera_view, -lightDirection);
             float r=sqrt(pow(vectorReflectado.x,2.0)+pow(vectorReflectado.y,2.0)+pow(vectorReflectado.z,2.0));
-            float alfa=atan(vectorReflectado.y/vectorReflectado.x)*0.03;
-            float beta=acos(vectorReflectado.z/r)*0.03;
+            float alfa=atan(vectorReflectado.y/vectorReflectado.x);
+            //float beta=acos(vectorReflectado.z/r);
+            float beta=acos(vectorReflectado.z/r);
             
             vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta)).xyz;
+            //colorRefleccion+=uAmbientColor;
+            //colorRefleccion+=uDirectionalColor2*pow(max(dot(pos_camera_view,lightDirection2), 0.0),64.0);
 
             float factorDifuso=max(0.8,dot(vNormal,uDirectionalColor)*1.1);
 
-            gl_FragColor = vec4((color+colorRefleccion)*factorDifuso,1.0);
+            //gl_FragColor = vec4(color*factorDifuso,1.0);
 
-            //gl_FragColor = vec4(mix(color, colorRefleccion, 0.5).rgb, 1.0);
+            gl_FragColor = vec4(mix(color, colorRefleccion, 0.5).rgb, 1.0);
             
         }
