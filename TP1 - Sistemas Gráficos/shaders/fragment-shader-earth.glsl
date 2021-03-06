@@ -218,15 +218,16 @@
           //color+=mix(color3,colorNieve,mask2);
           
           //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
-          vec3 lightVec = vec3(-1.0,0.0,1.0);
+          vec3 lightVec = vec3(0.0,1.0,1.0);
+          float factorDifuso=(max(0.5,dot(vNormal,lightDirection)*1.1));
           color+=uAmbientColor;
-          color+=0.1*uDirectionalColor*max(dot(vNormal,lightVec), 0.0);
-          color+=uDirectionalColor2*pow(max(dot(vNormal,lightVec), 0.0),32.0);
+          color+=uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
+          color+=uDirectionalColor2*pow(max(dot(vNormal,lightDirection), 0.0),64.0);
 
           // color difuso
-          float factorDifuso=(max(0.5,dot(vNormal,lightVec)*1.1));
+          
 
-          gl_FragColor = vec4(color*factorDifuso,1.0);
+          gl_FragColor = vec4(color,1.0);
 
           //gl_FragColor = vec4(vNormal,1.0);
             

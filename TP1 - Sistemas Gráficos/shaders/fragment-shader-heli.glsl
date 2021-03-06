@@ -52,11 +52,11 @@
             float factorDifuso=max(0.5,dot(N,lightVec)*1.1);
             color+=uAmbientColor;
             color+=0.3*factorDifuso*max(dot(N,lightVec), 0.0);
-            color+=uDirectionalColor2*pow(max(dot(N,-lightDirection2), 0.0),64.0);
+            color+=0.3*uDirectionalColor2*pow(max(dot(N,lightVec), 0.0),64.0);
 
             textureColor+=uAmbientColor;
             textureColor+=0.3*factorDifuso*max(dot(N,lightVec), 0.0);
-            textureColor+=uDirectionalColor2*pow(max(dot(N,lightVec), 0.0),64.0);
+            textureColor+=0.3*uDirectionalColor2*pow(max(dot(N,lightVec), 0.0),64.0);
 
             // Utilizo color o textura
             if (uUseColor){

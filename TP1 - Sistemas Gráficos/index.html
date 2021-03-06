@@ -456,7 +456,7 @@
             // Se inicializan las variables asociadas con la Iluminación           
             // Configuración de la luz
             // Sol
-            var sunPosition = vec3.fromValues(-500.0, 500.0, 500.0);
+            var sunPosition = vec3.fromValues(-800.0, 800.0, 800.0);
 
             gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
             gl.uniform3f(shaderProgram.directionalColorUniform, 1.2, 1.1, 0.7);
@@ -471,12 +471,12 @@
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "scale1"), scale1);
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "low"), low);
             gl.uniform1f(gl.getUniformLocation(shaderProgramEarth, "high"), high);
-            gl.uniform3f(shaderProgramEarth.directionalColorUniform, 1.2, 1.1, 0.7);
+            gl.uniform3f(shaderProgramEarth.directionalColorUniform, 0.6, 0.6, 0.6);
             gl.uniform1i(shaderProgramEarth.useLightingUniform,(lighting=="true"));
 
             gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform, sunPosition);
             gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform2, sunPosition);
-            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.6, 0.6, 0.6);                   //Ambiente
+            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
             gl.uniform3f(shaderProgramEarth.directionalColorUniform2,  1.0, 1.0, 1.0);              //Difusa
 
             gl.uniform1f(shaderProgramWater.frameUniform, time/10.0 );

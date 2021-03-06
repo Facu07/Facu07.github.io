@@ -34,7 +34,7 @@
         
         // constantes
         const float PI=3.141592653;
-        const float epsilon=0.1; //2.0*1.0/1024.0; // 2.0*DistanciaUV/MedidaTextura
+        const float epsilon=50.0/1024.0; // 2.0*DistanciaUV/MedidaTextura
         const float amplitud=5.0;
 
         void main(void) {
