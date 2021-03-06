@@ -4,7 +4,7 @@ class PlataformaHeli{
 
 		this.shaderProgram = shaderProgram;
 		this.plataformaHeli = new Objeto3D(crearGeometria(new Plano(1,1), filas, columnas, true), this.shaderProgram);
-		this.plataformaHeli.setPosicion(1,1.8,1)
+		this.plataformaHeli.setPosicion(1,2,1)
 		this.plataformaHeli.initTexture("img/helipad.jpg");
 		/*this.tapaPlataformaHeli1 = new Objeto3D(crearGeometria(new Plano(1,1), filas, columnas, false), this.shaderProgram);
 		this.tapaPlataformaHeli1.setRotacion(Math.PI/2,0,0)

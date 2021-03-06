@@ -456,7 +456,7 @@
             // Se inicializan las variables asociadas con la Iluminación           
             // Configuración de la luz
             // Sol
-            var sunPosition = vec3.fromValues(-800.0, 800.0, 800.0);
+            var sunPosition = vec3.fromValues(-800.0, 1200.0, 800.0);
 
             gl.uniform1f(shaderProgram.frameUniform, time/10.0 );
             gl.uniform3f(shaderProgram.directionalColorUniform, 1.2, 1.1, 0.7);
@@ -630,8 +630,8 @@
             sky.initBuffers();
             sky.initTexture("img/cielo1.jpg");
 
+            contenedorHelicoptero = new Helicoptero(shaderProgramHeli);
             controlHelicopterio=new ControlHelicoptero();
-            contenedorHelicoptero = new Helicoptero(shaderProgram);
 
 
             agua = new TextureManager(12);

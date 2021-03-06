@@ -226,7 +226,6 @@
 
           // color difuso
           
-
           gl_FragColor = vec4(color,1.0);
 
           //gl_FragColor = vec4(vNormal,1.0);
