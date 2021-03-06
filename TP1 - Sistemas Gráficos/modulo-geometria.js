@@ -54,10 +54,10 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
 
     this.getNormal=function(u,v) {
 
-        if ((conTapa && v==0) || (conTapa && v == 1)) {  
-            if(v==0){
+        if (conTapa) {  
+            if(v >= 0 && v <= 0.03){
                 return [1,0,0];         
-            }else{
+            }if(v >= 0.97 && v <= 1){
                 return [0,0,1];
             }
         }

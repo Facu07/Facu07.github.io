@@ -69,5 +69,7 @@
                 gl_FragColor = vec4(textureColor+colorRefleccion,1.0);
                 //gl_FragColor = vec4(mix(textureColor, colorRefleccion, 0.5).rgb, 1.0);
             }
+
+            //gl_FragColor = vec4(N,1.0);
             
         }
