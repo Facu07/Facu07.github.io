@@ -40,7 +40,7 @@
             vec3 lightVec = vec3(-1.0,1.0,-1.0);
 
             textureColor+=uAmbientColor;
-            textureColor+=textureColor*0.3*max(dot(N,lightDirection), 0.0);
+            textureColor+=uDirectionalColor*max(dot(N,lightDirection), 0.0);
             textureColor+=uDirectionalColor2*pow(max(dot(N,lightDirection), 0.0),64.0);
 
 
