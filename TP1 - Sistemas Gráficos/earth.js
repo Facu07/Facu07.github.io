@@ -161,12 +161,12 @@ class Earth {
         }
 
         if (reflectiveTexture != null) {
-            gl.uniform1f(shaderProgram.useReflectionUniform, true);
+            gl.uniform1f(shaderProgramWater.useReflectionUniform, true);
             gl.activeTexture(gl.TEXTURE1);
             gl.bindTexture(gl.TEXTURE_2D, reflectiveTexture);
-            gl.uniform1i(shaderProgram.samplerUniformReflection, 1);
+            gl.uniform1i(shaderProgramWater.samplerUniformReflection, 1);
         }else{
-            gl.uniform1f(shaderProgram.useReflectionUniform, false);
+            gl.uniform1f(shaderProgramWater.useReflectionUniform, false);
         }
         
         gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.webgl_index_buffer);
