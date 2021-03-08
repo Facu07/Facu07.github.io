@@ -241,10 +241,10 @@ class Helicoptero {
 
 	dibujar = function(){
 
-		this.cilindro1.setRotacion(0,time*100,0);
+		/*this.cilindro1.setRotacion(0,time*100,0);
 		this.cilindro2.setRotacion(0,time*100,0);
 		this.cilindro3.setRotacion(0,time*100,0);
-		this.cilindro4.setRotacion(0,time*100,0);
+		this.cilindro4.setRotacion(0,time*100,0);*/
 
 		this.helicoptero.dibujar(mat4.create(),false);
 
