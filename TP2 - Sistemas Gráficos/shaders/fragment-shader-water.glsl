@@ -34,18 +34,14 @@
 
             //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
             float factorDifuso=max(0.8,dot(vNormal,lightVec)*1.1);
-            //color+=uAmbientColor;
-            /*color+=0.3*factorDifuso*max(dot(vNormal,lightVec), 0.0);
-            color+=uDirectionalColor2*pow(max(dot(vNormal, lightVec), 0.0),64.0);*/
 
             vec3 vectorReflectado = reflect(pos_camera_view, vNormal);
             float r=sqrt(pow(vectorReflectado.x,2.0)+pow(vectorReflectado.y,2.0)+pow(vectorReflectado.z,2.0));
-            float alfa=atan(2.0*vectorReflectado.x/vectorReflectado.z);
+            float alfa=atan(vectorReflectado.x/vectorReflectado.z);
             float beta=acos(vectorReflectado.y/r);
             
-            vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa/2.0, beta/2.0)).xyz*0.5;
-            /*colorRefleccion+=uAmbientColor;
-            colorRefleccion+=0.3*factorDifuso*pow(max(dot(pos_camera_view,lightDirection2), 0.0),64.0);*/
+            vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta/2.0)).xyz;
+
 
             //gl_FragColor = vec4(mix(color, colorRefleccion, 0.5).rgb, 1.0);
             gl_FragColor = vec4(color + colorRefleccion, 1.0);
