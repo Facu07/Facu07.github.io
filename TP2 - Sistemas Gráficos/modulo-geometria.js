@@ -71,7 +71,7 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
 
         var normal = this.prodVectorial(sup1, sup2);
 
-        return [0,1,0];
+        return [1,1,0];
     }
 
     this.getCoordenadasTextura=function(u,v,i,j){
