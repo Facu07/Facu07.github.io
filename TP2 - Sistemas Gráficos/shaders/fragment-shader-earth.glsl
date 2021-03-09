@@ -221,7 +221,7 @@
           vec3 lightVec = vec3(-1.0,1.0,-1.0);
           float factorDifuso=(max(0.5,dot(vNormal,lightDirection)*1.1));
           color+=uAmbientColor;
-          color+=0.80*uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
+          color+=0.70*uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
           color+=0.03*uDirectionalColor2*pow(max(dot(vNormal,lightDirection), 0.0),8.0);
           //color+=factorDifuso;
           
