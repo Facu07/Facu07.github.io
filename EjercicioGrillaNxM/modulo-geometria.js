@@ -43,9 +43,12 @@ function crearGeometria(){
             filas = columnas = 20;
         }
     }else if (primitiva == 3){
-        superficie3D=new TuboSenoidal(amplitud, longitud, radio);
-        if (filas < 30 || columnas < 30){
-            filas = columnas = 30;
+        for (var i = 0; i < 2; i++) {
+            superficie3D=new TuboSenoidal(amplitud, longitud, 1.5, 0.5, 10, false);
+            if (filas < 30 || columnas < 30){
+                filas = columnas = 30;
+            }
+            radio = 1;
         }
     }
     
@@ -96,28 +99,66 @@ function Esfera(radio){
     }
 }
 
-function TuboSenoidal(amplitud, longitud, radio){
+function TuboSenoidal(amplitud_onda, long_onda, radio, radio2, altura, conTapa) {
 
-    this.getPosicion=function(u,v){
-       
-        var y = (v*longitud*2)-2.0;
-        var x=(Math.cos(u*2*PI)*radio);
-        var z=(Math.sin(u*2*PI)*radio);
-        var radioAnterior = radio;
-        radio=radio+(Math.cos(y*PI*2.0)/100*amplitud);
+    this.getPosicion=function(u,v) {
+
+        /*var delta = amplitud_onda*Math.cos(v*2*Math.PI/long_onda);
+        var x = (radio + delta)*Math.cos(2*Math.PI*u);
+        var z = (radio + delta)*Math.sin(2*Math.PI*u);
+        var y = altura/2*(v-0.5);
+        if ((conTapa && v==0) || (conTapa && v == 1)) {  
+            return [0,y,0];         
+        }*/
+        var x = (radio - radio2*Math.cos(Math.PI*u*2))*Math.cos(Math.PI*v*2);
+        var z = (radio - radio2*Math.cos(Math.PI*u*2))*Math.sin(Math.PI*v*2);
+        var y = altura/2*(radio2*Math.sin(Math.PI*u*2));
+        /*var a = 2.0
+        var x = (radio + radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.cos(Math.PI*v*2),1);
+        var z = (radio + radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.sin(Math.PI*v*2),1);
+        var y = radio*Math.pow(Math.sin(Math.PI*u*2),0.2);
+        if (v==0){  
+            return [x,0,z];         
+        }*/
+
+        /*var x=(radio*(Math.cos(u*PI*2))*Math.sin(v*PI));
+        var y=(radio*Math.cos(v*PI))-0.5;
+        var z=(radio*(Math.sin(u*PI*2))*Math.sin(v*PI)); */   
 
         return [x,y,z];
     }
 
-    this.getNormal=function(u,v){
-        return [2.0*Math.cos(u*2.0*PI)*radio,0,2.0*Math.sin(u*2.0*PI)*radio];
+    this.restaVec=function(vecA, vecB) {
+        return [vecA[0] - vecB[0], vecA[1] - vecB[1], vecA[2] - vecB[2]];
     }
 
-    this.getCoordenadasTextura=function(u,v){
+    this.prodVectorial = function(vecA, vecB) {
+        var x = vecA[1] * vecB[2] - vecA[2] * vecB[1];
+        var y = vecA[2] * vecB[0] - vecA[0] * vecB[2];
+        var z = vecA[0] * vecB[1] - vecA[1] * vecB[0];
+        return [x,y,z];
+    }
+
+    this.getNormal=function(u,v) {
+
+        var orig = this.getPosicion(u,v);
+        var delta1 = this.getPosicion(u+.01,v);
+        var delta2 = this.getPosicion(u,v+.01);
+
+        var sup1 = this.restaVec(delta1, orig);
+        var sup2 = this.restaVec(delta2, orig);
+
+        var normal = this.prodVectorial(sup1, sup2);
+
+        return normal;
+    }
+
+    this.getCoordenadasTextura=function(u,v) {
+        u = 1.0 - (filas / (columnas - 1));
+        v = 1.0 - altura;
         return [u,v];
     }
 }
-
 
 function generarSuperficie(superficie,filas,columnas){
     

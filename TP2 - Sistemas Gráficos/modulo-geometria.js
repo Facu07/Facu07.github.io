@@ -71,7 +71,7 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
 
         var normal = this.prodVectorial(sup1, sup2);
 
-        return [1,1,0];
+        return [1,1,1];
     }
 
     this.getCoordenadasTextura=function(u,v,i,j){
@@ -104,6 +104,30 @@ function Plano(ancho,largo){
     this.getCoordenadasTextura=function(u,v){
         return [u,v];
     }
+}
+
+function Turbina(radio, radio2, altura){
+
+    this.getPosicion=function(u,v) {
+        var x = (radio - radio2*Math.cos(Math.PI*u*2))*Math.cos(Math.PI*v*2);
+        var z = (radio - radio2*Math.cos(Math.PI*u*2))*Math.sin(Math.PI*v*2);
+        var y = altura/2*(radio2*Math.sin(Math.PI*u*2));
+        return [x,y,z];
+    }
+
+    this.getNormal=function(u,v) {
+        var coords = this.getPosicion(u,v);
+        var x = coords[0];
+        var y = coords[1];
+        var z = coords[2];
+        var norm = Math.sqrt([x,y,z].flatMap(x=>Math.pow(x,2)).reduce((a,b) => a+b, 0));
+        return [x/norm, y/norm, z/norm];
+    }
+
+    this.getCoordenadasTextura=function(u,v) {
+        return [u,v];
+    }
+
 }
 
 

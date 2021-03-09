@@ -24,8 +24,8 @@ var controlR = [[0,0,-1.5],[0,0,0.5],[0,0,1.5]];
 var controlFBase = [[-0.7,-1.7,0],[1.0,-1.7,0],[1.5,-1.2,0],[1.6,-0.5,0],[1,0.5,0],[0.2,0.7,0],[-3,0,0],[-0.7,-1.7,0]];
 var controlRBase = [[0,0,-0.5],[0,0,0],[0,0,0.5]];
 
-var controlFTurbinas = [[3.5/5,-1/5,0],[3.5/5,-1/5,0],[3.8/5,-1/5,0],[3.8/5,2/5,0],[3.5/5,2/5,0],[3.5/5,2/5,0],[-1/5,2/5,0],[-3.5/5,2/5,0],[-3.5/5,2/5,0],[-3.8/5,2/5,0],[-3.8/5,-1/5,0],[-3.5/5,-2/5,0],[-3.5/5,-2/5,0],[-1.5/5,-2/5,0],[2.5/5,-2/5,0],[3.5/5,-1/5,0]];
-var controlRTurbinas = [[0,-0.1,0],[0,0,0],[0,0.1,0]];
+var controlFTurbinas = [[-1,0,0],[-1,2,0],[1,2,0],[1,0,0],[1,-2,0],[0,-2,0],[0,-1,0]];
+var controlRTurbinas = [[-1,0,-1],[-1,0,1],[1,0,-2],[-1,0,-2],[-1,0,-1]];
 
 class Helicoptero {
 
@@ -75,15 +75,15 @@ class Helicoptero {
 		this.matricesModeladoPrueba = discretizadorDeCurvas(this.recorridoPrueba, filas);
 		this.matricesNormalesPrueba = discretizadorDeRecorrido(this.recorridoPrueba,filas);
 		this.SUPERFICIETURBINA = new SuperficieBarrido(this.formaDiscretaPrueba, this.matricesModeladoPrueba, this.matricesNormalesPrueba, filas, columnas, false);
-		this.prueba = new Objeto3D(crearGeometria(this.SUPERFICIETURBINA, filas, columnas, false,), this.shaderProgram);
+		//this.prueba = new Objeto3D(crearGeometria(this.SUPERFICIETURBINA, filas, columnas, false,), this.shaderProgram);
 
-		this.turbina1 = new Objeto3D(crearGeometria(this.SUPERFICIETURBINA, filas, columnas, false), this.shaderProgram)
-		//this.turbina1 = new Objeto3D(crearGeometria(new Dona(0.1,0.5), filas, columnas, true), this.shaderProgram)
-		this.turbina1.setPosicion(0,1,-1.2)
-		this.turbina1.setEscala(8,25,2);
+		this.turbina1 = new Objeto3D(crearGeometria(new Turbina(0.5,0.1,10), filas, columnas, false), this.shaderProgram)
+		//this.turbina1 = new Objeto3D(crearGeometria(this.SUPERFICIETURBINA, filas, columnas, false), this.shaderProgram)
+		this.turbina1.setPosicion(0,1,-1.5)
+		this.turbina1.setEscala(8,3,2);
 		this.turbina1.setColor(1,0,0)
 		this.turbina1.initTexture("img/textura-rojo.jpg");
-		this.turbina1.initReflectionTexture("img/cielo1-refmap.jpg");
+		//this.turbina1.initReflectionTexture("img/cielo1-refmap.jpg");
 
 		
 		this.cilindro1 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.2, 0.5, true), filas, columnas, false), this.shaderProgram)
@@ -113,7 +113,7 @@ class Helicoptero {
 		this.turbina2.setRotacion(Math.PI,0,0);
 		this.turbina2.setColor(1,0,0)
 		this.turbina2.initTexture("img/textura-rojo.jpg");
-		this.turbina2.initReflectionTexture("img/cielo1-refmap.jpg");
+		//this.turbina2.initReflectionTexture("img/cielo1-refmap.jpg");
 
 		this.cilindro2 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.2, 0.5, true), filas, columnas, false), this.shaderProgram)
 		this.cilindro2.setColor(1,1,1)
@@ -141,7 +141,7 @@ class Helicoptero {
 		this.turbina3.setEscala(8,25,2);
 		this.turbina3.setColor(1,0,0)
 		this.turbina3.initTexture("img/textura-rojo.jpg");
-		this.turbina3.initReflectionTexture("img/cielo1-refmap.jpg");
+		//this.turbina3.initReflectionTexture("img/cielo1-refmap.jpg");
 
 		this.cilindro3 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.2, 0.5, true), filas, columnas, false), this.shaderProgram)
 		this.cilindro3.setColor(1,1,1)
@@ -170,7 +170,7 @@ class Helicoptero {
 		this.turbina4.setEscala(8,25,2);
 		this.turbina4.setColor(1,0,0)
 		this.turbina4.initTexture("img/textura-rojo.jpg");
-		this.turbina4.initReflectionTexture("img/cielo1-refmap.jpg");
+		//this.turbina4.initReflectionTexture("img/cielo1-refmap.jpg");
 
 		this.cilindro4 = new Objeto3D(crearGeometria(new TuboSenoidal(0, 1, 0.2, 0.5, true), filas, columnas, false), this.shaderProgram)
 		this.cilindro4.setColor(1,1,1)
