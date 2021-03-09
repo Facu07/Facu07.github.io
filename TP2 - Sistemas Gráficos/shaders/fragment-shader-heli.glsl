@@ -37,10 +37,10 @@
 
             vec3 vectorReflectado = reflect(pos_camera_view, N);
             float r=sqrt(pow(vectorReflectado.x,2.0)+pow(vectorReflectado.y,2.0)+pow(vectorReflectado.z,2.0));
-            float alfa=atan(vectorReflectado.x/vectorReflectado.z);
-            float beta=acos(vectorReflectado.y/r);
+            float alfa=atan(vectorReflectado.x/vectorReflectado.z)/(PI*2.0);
+            float beta=acos(vectorReflectado.y/r)/(PI*2.0);
             
-            vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta)).xyz*0.3;
+            vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta)).xyz;
 
             vec3 color = vec3(0,0,0);
             color.x=RGB.x;
