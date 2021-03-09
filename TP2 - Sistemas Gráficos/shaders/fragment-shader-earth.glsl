@@ -34,7 +34,7 @@
         uniform vec3 uPrincipalLightDirection;
 
         varying highp vec2 vUv;
-        varying vec3 v;
+        varying vec3 v_Vertex;
         
         uniform float scale1;
         uniform float low;
@@ -217,13 +217,13 @@
           
           //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
           vec3 lightVec = vec3(-1.0,1.0,-1.0);
-          vec3 lightDirection= normalize(uLightPosition-vWorldPosition); //cambiar nombre
+          vec3 lightDirection= normalize(uLightPosition-v_Vertex); //cambiar nombre
           vec3 lightDirection2= normalize(uLightPosition);
           float angulo=clamp(dot(vNormal,lightDirection),0.0,1.0);
 
           vec3 ambientColor=uAmbientColor*color;
           vec3 difusseColor=color*angulo;
-          //angulo=pow(angulo,64.0);
+
           vec3 specularColor = vec3(0.0,0.0,0.0);
 
           // Calculate the reflection vector
@@ -231,7 +231,7 @@
 
           // Calculate a vector from the fragment location to the camera.
           // The camera is at the origin, so negating the vertex location gives the vector
-          vec3 to_camera = -1.0 * vWorldPosition;
+          vec3 to_camera = -1.0 * v_Vertex;
 
           // Calculate the cosine of the angle between the reflection vector
           // and the vector going to the camera.
@@ -239,10 +239,10 @@
           to_camera = normalize( to_camera );
           angulo = dot(reflection, to_camera);
           angulo = clamp(angulo, 0.0, 1.0);
-          angulo = pow(angulo, 64.0);
+          angulo = pow(angulo, 30.0);
 
           if(angulo > 0.0){
-            specularColor = vec3(0.5,0.5,0.5) * angulo;
+            specularColor = vec3(1.0,1.0,1.0) * angulo;
             difusseColor = difusseColor * (1.0 - angulo);
           } else {
             specularColor = vec3(0.0, 0.0, 0.0);

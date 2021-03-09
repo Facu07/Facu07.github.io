@@ -28,7 +28,7 @@
         varying vec3 vNormal;
         //varying vec2 vUv;
         varying highp vec2 vUv;
-        varying vec3 v;
+        varying vec3 v_Vertex;
 
 
         
@@ -58,6 +58,8 @@
             //Calculamos las coordenadas de vista-espacio
             vec4 worldPos = uMMatrix*vec4(position, 1.0);
 
+            v_Vertex = vec3(uVMatrix*uMMatrix*vec4(position,1.0));
+
             gl_Position = uPMatrix*uVMatrix*worldPos;
 
             vWorldPosition=worldPos.xyz;              
@@ -81,7 +83,6 @@
             vec3 tan1=((gradV1+gradV2)/2.0);
             vec3 tan2=((gradU1+gradU2)/2.0);
             vNormal=cross(tan1,tan2);
-            v = gradU1;
             vUv=uv;
 
         }
