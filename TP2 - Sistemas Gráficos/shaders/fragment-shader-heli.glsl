@@ -24,7 +24,6 @@
         uniform sampler2D uSamplerReflectionMap;
 
         // constantes        
-        const float alfa = 10.0;
         const float PI=3.141592653;
 
         void main(void) {

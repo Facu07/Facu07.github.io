@@ -14,13 +14,7 @@
         uniform vec3 uLightPosition;        // posición de la luz
         uniform vec3 uLightPosition2;       // posición de la luz2
         uniform vec3 RGB;
-        //varying vec4 Ka;// = vec4( 1.0, 0.3, 0.3, 1.0);
-        const vec4 Kd= vec4( 0.2, 0.2, 0.2 ,1.0);
-        const vec4 Ks= vec4( 1.0, 1.0, 1.0, 1.0);
-        const vec4 La= vec4( 0.3, 0.3, 0.3, 1.0);
-        const vec4 Ld= vec4( 0.3, 0.3, 0.3, 1.0);
-        const vec4 Ls= vec4( 0.4, 0.4, 0.4, 1.0);           
-                 
+
 
         uniform bool uUseReflection;        // usar refleccion si/no
         uniform bool uUseColor;             // usar color si/no

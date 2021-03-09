@@ -19,6 +19,7 @@
         uniform sampler2D uSamplerReflectionMap;
 
         varying highp vec2 vUv;
+        const float PI=3.141592653;
                         
         
         // ***************************************************************************
@@ -37,8 +38,8 @@
 
             vec3 vectorReflectado = reflect(pos_camera_view, vNormal);
             float r=sqrt(pow(vectorReflectado.x,2.0)+pow(vectorReflectado.y,2.0)+pow(vectorReflectado.z,2.0));
-            float alfa=atan(vectorReflectado.x/vectorReflectado.z)/(PI*2.0);
-            float beta=acos(vectorReflectado.y/r)/(PI*2.0);
+            float alfa=atan(vectorReflectado.x/vectorReflectado.z);
+            float beta=acos(vectorReflectado.y/r);
             
             vec3 colorRefleccion = texture2D(uSamplerReflectionMap, vec2(alfa, beta/2.0)).xyz;
 
