@@ -150,8 +150,6 @@
           // uSampler0: tierra
           // uSampler1: roca
           // uSampler2: pasto
-          vec3 lightDirection= normalize(uLightPosition); //cambiar nombre
-          vec3 lightDirection2= normalize(uLightPosition);
 
           // vector +Z
           vec3 up=vec3(0.0,0.0,1.0);
@@ -219,11 +217,37 @@
           
           //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
           vec3 lightVec = vec3(-1.0,1.0,-1.0);
-          float factorDifuso=(max(0.5,dot(vNormal,lightDirection)*1.1));
-          color+=uAmbientColor;
-          color+=0.70*uDirectionalColor*max(dot(vNormal,lightDirection), 0.0);
-          color+=0.03*uDirectionalColor2*pow(max(dot(vNormal,lightDirection), 0.0),8.0);
-          //color+=factorDifuso;
+          vec3 lightDirection= normalize(uLightPosition-vWorldPosition); //cambiar nombre
+          vec3 lightDirection2= normalize(uLightPosition);
+          float angulo=clamp(dot(vNormal,lightDirection),0.0,1.0);
+
+          vec3 ambientColor=uAmbientColor*color;
+          vec3 difusseColor=color*angulo;
+          //angulo=pow(angulo,64.0);
+          vec3 specularColor = vec3(0.0,0.0,0.0);
+
+          // Calculate the reflection vector
+          vec3 reflection = 2.0 * dot(vNormal,lightDirection) * vNormal - lightDirection;
+
+          // Calculate a vector from the fragment location to the camera.
+          // The camera is at the origin, so negating the vertex location gives the vector
+          vec3 to_camera = -1.0 * vWorldPosition;
+
+          // Calculate the cosine of the angle between the reflection vector
+          // and the vector going to the camera.
+          reflection = normalize( reflection );
+          to_camera = normalize( to_camera );
+          angulo = dot(reflection, to_camera);
+          angulo = clamp(angulo, 0.0, 1.0);
+          angulo = pow(angulo, 64.0);
+
+          if(angulo > 0.0){
+            specularColor = vec3(0.5,0.5,0.5) * angulo;
+            difusseColor = difusseColor * (1.0 - angulo);
+          } else {
+            specularColor = vec3(0.0, 0.0, 0.0);
+          }
+          color=ambientColor+difusseColor+specularColor;
           
           gl_FragColor = vec4(color,1.0);
 

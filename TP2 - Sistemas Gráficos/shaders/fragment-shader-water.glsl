@@ -45,5 +45,5 @@
 
 
             //gl_FragColor = vec4(mix(color, colorRefleccion, 0.5).rgb, 1.0);
-            gl_FragColor = vec4(color + colorRefleccion, 1.0);
+            gl_FragColor = vec4(color + colorRefleccion*0.3, 1.0);
         }

@@ -476,7 +476,7 @@
 
             gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform, sunPosition);
             gl.uniform3fv(shaderProgramEarth.lightingDirectionUniform2, sunPosition);
-            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.4, 0.4, 0.4);                    //Ambiente
+            gl.uniform3f(shaderProgramEarth.ambientColorUniform, 0.3, 0.3, 0.3);                    //Ambiente
             gl.uniform3f(shaderProgramEarth.directionalColorUniform2,  1.0, 1.0, 1.0);              //Difusa
 
             gl.uniform1f(shaderProgramWater.frameUniform, time/10.0 );
@@ -495,8 +495,8 @@
 
             gl.uniform3fv(shaderProgramHeli.lightingDirectionUniform, sunPosition);
             gl.uniform3fv(shaderProgramHeli.lightingDirectionUniform2, sunPosition);
-            gl.uniform3f(shaderProgramHeli.ambientColorUniform, 0.3, 0.3, 0.3);                   //Ambiente
-            gl.uniform3f(shaderProgramHeli.directionalColorUniform2, 1.0, 1.0, 1.0);              //Difusa
+            gl.uniform3f(shaderProgramHeli.ambientColorUniform, 0.2, 0.2, 0.2);                   //Ambiente
+            gl.uniform3f(shaderProgramHeli.directionalColorUniform2, 0.8, 0.8, 0.8);              //Difusa
 
             // Definimos la ubicación de la camara
 

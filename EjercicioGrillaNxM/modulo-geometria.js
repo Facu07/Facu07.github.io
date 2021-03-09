@@ -44,7 +44,7 @@ function crearGeometria(){
         }
     }else if (primitiva == 3){
         for (var i = 0; i < 2; i++) {
-            superficie3D=new TuboSenoidal(amplitud, longitud, 1.5, 0.5, 10, false);
+            superficie3D=new TuboSenoidal(amplitud, longitud, 1, 0.1, 5, false);
             if (filas < 30 || columnas < 30){
                 filas = columnas = 30;
             }
