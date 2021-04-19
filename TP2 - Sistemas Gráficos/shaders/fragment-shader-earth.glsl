@@ -147,9 +147,12 @@
 
         void main(void) {
 
+          // uSampler : heightmap
           // uSampler0: tierra
           // uSampler1: roca
           // uSampler2: pasto
+
+          vec4 textureColor = texture2D(uSampler, vec2(vUv.s, vUv.t));
 
           // vector +Z
           vec3 up=vec3(0.0,0.0,1.0);
@@ -214,42 +217,47 @@
           //vec3 color = vec3(0.0,0.0,0.0);
 
           //color+=mix(color3,colorNieve,mask2);
-          
-          //Le sumo las contribuciones de la ambiente, difusa y especular respectivamente
-          vec3 lightVec = vec3(-1.0,1.0,-1.0);
-          vec3 lightDirection= normalize(uLightPosition-v_Vertex); //cambiar nombre
-          vec3 lightDirection2= normalize(uLightPosition);
-          float angulo=clamp(dot(vNormal,lightDirection),0.0,1.0);
+                   
+          vec3 lightColor=vec3(1.0,1.0,1.0);
 
-          vec3 ambientColor=uAmbientColor*color;
-          vec3 difusseColor=color*angulo;
+          //Ambiente
+          vec3 ambientColor=0.2*lightColor;
 
+          //Difusa
+          vec3 lightDirection= normalize(uLightPosition - vec3(vWorldPosition));
+          vec3 lightDirection2= normalize(uLightPosition2 - vec3(vWorldPosition));
+          vec3 diffStrength1=uDirectionalColor*max(dot(vNormal,lightDirection),0.0);
+          vec3 diffStrength2=uDirectionalColor2*max(dot(vNormal,lightDirection2),0.0);
+          vec3 difusseColor=diffStrength1+diffStrength2;
+
+          //Especular
           vec3 specularColor = vec3(0.0,0.0,0.0);
 
           // Calculate the reflection vector
-          vec3 reflection = 2.0 * dot(vNormal,lightDirection) * vNormal - lightDirection;
+          //vec3 reflection = 2.0 * dot(vNormal,lightDirection) * vNormal - lightDirection;
+          vec3 reflection = reflect(-lightDirection,vNormal);
 
           // Calculate a vector from the fragment location to the camera.
           // The camera is at the origin, so negating the vertex location gives the vector
-          vec3 to_camera = -1.0 * v_Vertex;
+          vec3 to_camera = -1.0 * vWorldPosition;
 
           // Calculate the cosine of the angle between the reflection vector
           // and the vector going to the camera.
-          reflection = normalize( reflection );
-          to_camera = normalize( to_camera );
-          angulo = dot(reflection, to_camera);
-          angulo = clamp(angulo, 0.0, 1.0);
-          angulo = pow(angulo, 30.0);
+          reflection = normalize(reflection);
+          to_camera = normalize(to_camera);
+          float specularStrength = 0.5;
+          float specularComponent = dot(to_camera, reflection);
+          specularComponent = max(specularComponent, 0.0);
+          specularComponent = pow(specularComponent, 128.0);
 
-          if(angulo > 0.0){
-            specularColor = vec3(1.0,1.0,1.0) * angulo;
-            difusseColor = difusseColor * (1.0 - angulo);
+          if(specularComponent > 0.0){
+            specularColor = lightColor * specularComponent * specularStrength;
           } else {
             specularColor = vec3(0.0, 0.0, 0.0);
           }
-          color=ambientColor+difusseColor+specularColor;
+          vec3 iluminacion=(ambientColor+difusseColor+specularColor);
           
-          gl_FragColor = vec4(color,1.0);
+          gl_FragColor = vec4(color*iluminacion,1.0);
 
           //gl_FragColor = vec4(vNormal,1.0);
             

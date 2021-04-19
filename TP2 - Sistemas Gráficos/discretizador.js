@@ -70,8 +70,9 @@ class CurvaBezier {
 	normal(t) {
 
  		var punto1 = this.tangente(t);
-		var punto2 = this.tangente(t + 0.01);
+		var punto2 = this.tangente(t + 0.001);//0.001
 		var result = this.prodVectorial(punto1, punto2);
+		//rotar tangente 90°
 
 		if (vec3.squaredLength(result) == 0) {
             result = [1,0,0];

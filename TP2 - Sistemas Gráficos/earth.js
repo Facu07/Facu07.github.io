@@ -178,7 +178,7 @@ class Earth {
         
         if (modo!="smooth") {
             gl.uniform1i(this.shaderProgram.useLightingUniform,false);
-            gl.drawElements(gl.LINE_STRIP, this.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
+            gl.drawElements(gl.TRIANGLES, this.webgl_index_buffer.numItems, gl.UNSIGNED_SHORT, 0);
         }
         
     }

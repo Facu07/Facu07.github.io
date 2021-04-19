@@ -44,7 +44,7 @@ function crearGeometria(){
         }
     }else if (primitiva == 3){
         for (var i = 0; i < 2; i++) {
-            superficie3D=new TuboSenoidal(amplitud, longitud, 1, 0.1, 5, false);
+            superficie3D=new TuboSenoidal(amplitud, longitud, 1, 0.1, 0.5, false);
             if (filas < 30 || columnas < 30){
                 filas = columnas = 30;
             }
@@ -53,6 +53,8 @@ function crearGeometria(){
     }
     
     mallaDeTriangulos=generarSuperficie(superficie3D,filas,columnas);
+    //superficie3D=new TuboSenoidal(amplitud, longitud, 1, 0.1, 0.5, true);
+    //mallaDeTriangulos=generarSuperficie(superficie3D,filas,columnas);
     
 }
 
@@ -99,31 +101,19 @@ function Esfera(radio){
     }
 }
 
-function TuboSenoidal(amplitud_onda, long_onda, radio, radio2, altura, conTapa) {
+function TuboSenoidal(amplitud_onda, long_onda, radio, radio2, altura, inverso) {
 
     this.getPosicion=function(u,v) {
 
-        /*var delta = amplitud_onda*Math.cos(v*2*Math.PI/long_onda);
-        var x = (radio + delta)*Math.cos(2*Math.PI*u);
-        var z = (radio + delta)*Math.sin(2*Math.PI*u);
-        var y = altura/2*(v-0.5);
-        if ((conTapa && v==0) || (conTapa && v == 1)) {  
-            return [0,y,0];         
-        }*/
-        var x = (radio - radio2*Math.cos(Math.PI*u*2))*Math.cos(Math.PI*v*2);
-        var z = (radio - radio2*Math.cos(Math.PI*u*2))*Math.sin(Math.PI*v*2);
-        var y = altura/2*(radio2*Math.sin(Math.PI*u*2));
-        /*var a = 2.0
-        var x = (radio + radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.cos(Math.PI*v*2),1);
-        var z = (radio + radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.sin(Math.PI*v*2),1);
-        var y = radio*Math.pow(Math.sin(Math.PI*u*2),0.2);
-        if (v==0){  
-            return [x,0,z];         
-        }*/
+        var x = (radio - radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.cos(Math.PI*v*2),1);
+        var z = (radio - radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.sin(Math.PI*v*2),1);
+        var y = Math.sqrt(radio*Math.pow(Math.sin(Math.PI*u*2),0.2))/2.0;
 
-        /*var x=(radio*(Math.cos(u*PI*2))*Math.sin(v*PI));
-        var y=(radio*Math.cos(v*PI))-0.5;
-        var z=(radio*(Math.sin(u*PI*2))*Math.sin(v*PI)); */   
+        if ((inverso)) {  
+            x = -(radio - radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.cos(Math.PI*v*2),1);
+            z = -(radio - radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.sin(Math.PI*v*2),1);
+            y = -Math.sqrt(radio*Math.pow(Math.sin(Math.PI*u*2),0.2));         
+        }
 
         return [x,y,z];
     }

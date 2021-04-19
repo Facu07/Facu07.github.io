@@ -7,6 +7,7 @@ var textured = false;
 var vertexBuffer = null;
 
 var superficie3D;
+var anteriorNormal = vec3.zero(vec3.create());
 
 
 function crearGeometria(SUPERFICIE, filas, columnas, esTexturada){
@@ -22,7 +23,7 @@ function dibujarGeometria(mallaDeTriangulos, textura, reflectiveTexture, shaderP
 
 }
 
-function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, vertices, conTapa) {
+function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, vertices, conTapa, normales) {
 
     this.getPosicion=function(u,v){
         var vectorModelado = matricesModelado[Math.round(v*niveles)];
@@ -52,7 +53,7 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
         return [x,y,z];
     }
 
-    this.getNormal=function(u,v) {
+    this.getNormal=function(u,v,deltaU,deltaV) {
 
         if (conTapa) {  
             if(v >= 0 && v <= 0.03){
@@ -63,15 +64,27 @@ function SuperficieBarrido(forma, matricesModelado, matricesNormales, niveles, v
         }
 
         var orig = this.getPosicion(u,v);
-        var delta1 = this.getPosicion(u+.01,v);
-        var delta2 = this.getPosicion(u,v+.01);
+        var delta1 = 0;
+        var delta2 = 0;
+        if(u+deltaU > 1){
+            delta1 = this.getPosicion(u-deltaU,v);
+        }else{
+            delta1 = this.getPosicion(u+deltaU,v);
+        }
+        if(v+deltaV > 1){
+            delta2 = this.getPosicion(u,v-deltaV);
+        }else{
+            delta2 = this.getPosicion(u,v+deltaV);
+        }
+
 
         var sup1 = this.restaVec(delta1, orig);
         var sup2 = this.restaVec(delta2, orig);
 
         var normal = this.prodVectorial(sup1, sup2);
 
-        return [1,1,1];
+        return normal;
+
     }
 
     this.getCoordenadasTextura=function(u,v,i,j){
@@ -106,22 +119,56 @@ function Plano(ancho,largo){
     }
 }
 
-function Turbina(radio, radio2, altura){
+function Turbina(radio, radio2, altura, invertido){
 
     this.getPosicion=function(u,v) {
-        var x = (radio - radio2*Math.cos(Math.PI*u*2))*Math.cos(Math.PI*v*2);
-        var z = (radio - radio2*Math.cos(Math.PI*u*2))*Math.sin(Math.PI*v*2);
-        var y = altura/2*(radio2*Math.sin(Math.PI*u*2));
+
+        var x = (radio - radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.cos(Math.PI*v*2),1);
+        var z = (radio - radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.sin(Math.PI*v*2),1);
+        var y = radio*Math.pow(Math.sin(Math.PI*u*2),0.2);
+
+        if ((invertido)) {  
+            x = -(radio - radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.cos(Math.PI*v*2),1);
+            z = -(radio - radio2*Math.pow(Math.cos(Math.PI*u*2),1))*Math.pow(Math.sin(Math.PI*v*2),1);
+            y = -Math.sqrt(radio*Math.pow(Math.sin(Math.PI*u*2),0.2));         
+        }
         return [x,y,z];
     }
 
-    this.getNormal=function(u,v) {
-        var coords = this.getPosicion(u,v);
-        var x = coords[0];
-        var y = coords[1];
-        var z = coords[2];
-        var norm = Math.sqrt([x,y,z].flatMap(x=>Math.pow(x,2)).reduce((a,b) => a+b, 0));
-        return [x/norm, y/norm, z/norm];
+    this.restaVec=function(vecA, vecB) {
+        return [vecA[0] - vecB[0], vecA[1] - vecB[1], vecA[2] - vecB[2]];
+    }
+
+    this.prodVectorial = function(vecA, vecB) {
+        var x = vecA[1] * vecB[2] - vecA[2] * vecB[1];
+        var y = vecA[2] * vecB[0] - vecA[0] * vecB[2];
+        var z = vecA[0] * vecB[1] - vecA[1] * vecB[0];
+        return [x,y,z];
+    }
+
+    this.getNormal=function(u,v,deltaU, deltaV) {
+
+        var orig = this.getPosicion(u,v);
+        var delta1 = 0;
+        var delta2 = 0;
+        if(u+deltaU > 1){
+            delta1 = this.getPosicion(u-deltaU,v);
+        }else{
+            delta1 = this.getPosicion(u+deltaU,v);
+        }
+        if(v+deltaV > 1){
+            delta2 = this.getPosicion(u,v-deltaV);
+        }else{
+            delta2 = this.getPosicion(u,v+deltaV);
+        }
+
+
+        var sup1 = this.restaVec(delta1, orig);
+        var sup2 = this.restaVec(delta2, orig);
+
+        var normal = this.prodVectorial(sup1, sup2);
+
+        return normal;
     }
 
     this.getCoordenadasTextura=function(u,v) {
@@ -158,9 +205,9 @@ function Esfera(radio) {
 function Dona(radio, trayecto) {
 
     this.getPosicion=function(u,v) {
-        var x = Math.cos(2*Math.PI*u)*(trayecto + radio*Math.sin(Math.PI*v));
-        var z = Math.sin(2*Math.PI*u)*(trayecto + radio*Math.sin(Math.PI*v));
-        var y = radio*Math.cos(Math.PI*v);
+        var x = Math.cos(2*Math.PI*u)*(trayecto + radio*Math.sin(Math.PI*v*2));
+        var z = Math.sin(2*Math.PI*u)*(trayecto + radio*Math.sin(Math.PI*v*2));
+        var y = radio*Math.cos(Math.PI*v*2);
         return [x,y,z];
     }
 
@@ -176,7 +223,6 @@ function Dona(radio, trayecto) {
     this.getCoordenadasTextura=function(u,v) {
         u = 1.0 - (filas / (columnas - 1));
         v = 1.0 - trayecto;
-        return [u,v];
         return [u,v];
     }
 }
@@ -246,7 +292,7 @@ function generarSuperficie(superficie,filas,columnas){
             positionBuffer.push(pos[1]);
             positionBuffer.push(pos[2]);
 
-            var nrm=superficie.getNormal(u,v);
+            var nrm=superficie.getNormal(u,v,1/columnas,1/filas);
 
             normalBuffer.push(nrm[0]);
             normalBuffer.push(nrm[1]);
